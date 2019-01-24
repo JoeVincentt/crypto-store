@@ -14,22 +14,19 @@ const createToken = (user, secret, expiresIn) => {
   );
 };
 
-// Resolvers define the technique for fetching the types in the
-// schema.  We'll retrieve books from the "books" array above.
-
 exports.resolvers = {
   Query: {
-    getAllRecipes: async (root, args, { Recipe }) => {
-      const allRecipes = await Recipe.find().sort({ createdDate: "desc" });
-      return allRecipes;
+    getAllProducts: async (root, args, { Product }) => {
+      const allProducts = await Product.find().sort({ createdDate: "desc" });
+      return allProducts;
     },
-    getRecipe: async (root, { _id }, { Recipe }) => {
-      const recipe = await Recipe.findOne({ _id });
-      return recipe;
+    getProduct: async (root, { _id }, { Product }) => {
+      const product = await Product.findOne({ _id });
+      return product;
     },
-    searchRecipe: async (root, { searchTerm }, { Recipe }) => {
+    searchProduct: async (root, { searchTerm }, { Product }) => {
       if (searchTerm) {
-        const searchResults = await Recipe.find(
+        const searchResults = await Product.find(
           {
             $text: { $search: searchTerm }
           },
@@ -41,19 +38,19 @@ exports.resolvers = {
         });
         return searchResults;
       } else {
-        const recipes = await Recipe.find().sort({
+        const products = await Product.find().sort({
           likes: "desc",
           createdDate: "desc"
         });
-        return recipes;
+        return products;
       }
     },
 
-    getUserRecipes: async (root, { username }, { Recipe }) => {
-      const userRecipes = await Recipe.find({ username }).sort({
+    getUserProducts: async (root, { username }, { Product }) => {
+      const userProducts = await Product.find({ username }).sort({
         createdDate: "desc"
       });
-      return userRecipes;
+      return userProducts;
     },
 
     getCurrentUser: async (root, args, { currentUser, User }) => {
@@ -64,18 +61,18 @@ exports.resolvers = {
         username: currentUser.username
       }).populate({
         path: "favorites",
-        model: "Recipe"
+        model: "Product"
       });
       return user;
     }
   },
   Mutation: {
-    addRecipe: async (
+    addProduct: async (
       root,
       { name, imageUrl, description, category, instructions, username },
-      { Recipe }
+      { Product }
     ) => {
-      const newRecipe = await new Recipe({
+      const newProduct = await new Product({
         name,
         imageUrl,
         description,
@@ -83,11 +80,11 @@ exports.resolvers = {
         instructions,
         username
       }).save();
-      return newRecipe;
+      return newProduct;
     },
 
-    likeRecipe: async (root, { _id, username }, { Recipe, User }) => {
-      const recipe = await Recipe.findOneAndUpdate(
+    likeProduct: async (root, { _id, username }, { Product, User }) => {
+      const product = await Product.findOneAndUpdate(
         { _id },
         { $inc: { likes: 1 } }
       );
@@ -95,11 +92,11 @@ exports.resolvers = {
         { username },
         { $addToSet: { favorites: _id } }
       );
-      return recipe;
+      return product;
     },
 
-    unlikeRecipe: async (root, { _id, username }, { Recipe, User }) => {
-      const recipe = await Recipe.findOneAndUpdate(
+    unlikeProduct: async (root, { _id, username }, { Product, User }) => {
+      const product = await Product.findOneAndUpdate(
         { _id },
         { $inc: { likes: -1 } }
       );
@@ -107,32 +104,42 @@ exports.resolvers = {
         { username },
         { $pull: { favorites: _id } }
       );
-      return recipe;
+      return product;
     },
 
-    deleteUserRecipe: async (root, { _id }, { Recipe }) => {
-      const recipe = await Recipe.findOneAndRemove({ _id });
-      return recipe;
+    deleteUserProduct: async (root, { _id }, { Product }) => {
+      const product = await Product.findOneAndRemove({ _id });
+      return product;
     },
 
-    updateUserRecipe: async (
+    updateUserProduct: async (
       root,
       { _id, name, imageUrl, description, category },
-      { Recipe }
+      { Product }
     ) => {
-      const updatedRecipe = await Recipe.findOneAndUpdate(
+      const updatedProduct = await Product.findOneAndUpdate(
         { _id },
         { $set: { name, imageUrl, category, description } },
         { new: true }
       );
-      return updatedRecipe;
+      return updatedProduct;
     },
 
-    signinUser: async (root, { username, password }, { User }) => {
-      const user = await User.findOne({ username: username });
+    signinUser: async (
+      root,
+      { email, password, passwordConfirmation },
+      { User }
+    ) => {
+      if (password !== passwordConfirmation) {
+        throw new Error("Password Confirmation Failed");
+      }
+
+      const user = await User.findOne({ email: email });
+      console.log(user);
       if (!user) {
         throw new Error("User not found");
       }
+
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
         throw new Error("Invalid password");
@@ -140,10 +147,22 @@ exports.resolvers = {
       return { token: createToken(user, process.env.SECRET, "1hr") };
     },
 
-    signupUser: async (root, { username, email, password }, { User }) => {
-      const user = await User.findOne({ username: username });
-      if (user) {
-        throw new Error("User already exists");
+    signupUser: async (
+      root,
+      { username, email, password, passwordConfirmation },
+      { User }
+    ) => {
+      if (password !== passwordConfirmation) {
+        throw new Error("Password Confirmation Failed");
+      }
+
+      const userNameExists = await User.findOne({ username });
+      if (userNameExists) {
+        throw new Error("User Name already exists");
+      }
+      const emailExists = await User.findOne({ email });
+      if (emailExists) {
+        throw new Error("User Email already exists");
       }
 
       const newUser = await new User({

@@ -1,4 +1,4 @@
-type Recipe {
+type Product {
   _id: ID!
   name: String!
   imageUrl: String!
@@ -16,16 +16,16 @@ type User {
   password: String!
   email: String!
   joinDate: String
-  favorites: [Recipe]
+  favorites: [Product]
 }
 
 type Query {
-  getAllRecipes: [Recipe]
-  getRecipe(_id: ID!): Recipe
-  searchRecipe(searchTerm: String): [Recipe]
+  getAllProducts: [Product]
+  getProduct(_id: ID!): Product
+  searchProduct(searchTerm: String): [Product]
 
   getCurrentUser: User
-  getUserRecipes(username: String!): [Recipe]
+  getUserProducts(username: String!): [Product]
 }
 
 type Token {
@@ -33,30 +33,39 @@ type Token {
 }
 
 type Mutation {
-  addRecipe(
+  addProduct(
     name: String!
     imageUrl: String!
     description: String!
     category: String!
     instructions: String!
     username: String
-  ): Recipe
+  ): Product
 
-  deleteUserRecipe(_id: ID): Recipe
+  deleteUserProduct(_id: ID): Product
 
-  updateUserRecipe(
+  updateUserProduct(
     _id: ID!
     name: String!
     imageUrl: String!
     description: String!
     category: String!
-  ): Recipe
+  ): Product
 
-  likeRecipe(_id: ID!, username: String!): Recipe
+  likeProduct(_id: ID!, username: String!): Product
 
-  unlikeRecipe(_id: ID!, username: String!): Recipe
+  unlikeProduct(_id: ID!, username: String!): Product
 
-  signinUser(username: String!, password: String!): Token
+  signinUser(
+    email: String!
+    password: String!
+    passwordConfirmation: String!
+  ): Token
 
-  signupUser(username: String!, email: String!, password: String!): Token
+  signupUser(
+    username: String!
+    email: String!
+    password: String!
+    passwordConfirmation: String!
+  ): Token
 }

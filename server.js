@@ -1,16 +1,16 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
 const fs = require("fs");
-
 const mongoose = require("mongoose");
-// const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+// const bodyParser = require("body-parser");
 
 //Mongoose Models
-const Recipe = require("./models/Recipe");
+const Product = require("./models/Product");
 const User = require("./models/User");
 
+//GraphQL Types And Resolvers
 const typeDefs = gql`
   ${fs.readFileSync(__dirname.concat("/schema.graphql"), "utf8")}
 `;
@@ -26,14 +26,13 @@ const corsOptions = {
 };
 app.use(path, cors(corsOptions));
 
-//Set uop JWT authentication middleware
+// Set up JWT authentication middleware
 app.use(path, async (req, res, next) => {
-  const token = req.headers["authorization"];
+  const token = req.headers.authorization;
   if (token !== "null") {
     try {
       const currentUser = await jwt.verify(token, process.env.SECRET);
       req.currentUser = currentUser;
-      console.log(currentUser);
     } catch (error) {
       console.log("Token not found");
     }
@@ -45,11 +44,12 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => ({
-    currentUser: req.currentUser,
-    Recipe,
-    User
+    User,
+    Product,
+    currentUser: req.currentUser
   })
 });
+
 server.applyMiddleware({ app, path });
 
 const PORT = process.env.PORT || 4000;
