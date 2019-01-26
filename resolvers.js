@@ -16,6 +16,14 @@ const createToken = (user, secret, expiresIn) => {
 
 exports.resolvers = {
   Query: {
+    getAllOrders: async (root, args, { Order }) => {
+      const allOrders = await Order.find().sort({ timestamps: "desc" });
+      return allOrders;
+    },
+    getOrder: async (root, { _id }, { Order }) => {
+      const order = await Order.findOne({ _id });
+      return order;
+    },
     getAllProducts: async (root, args, { Product }) => {
       const allProducts = await Product.find().sort({ createdDate: "desc" });
       return allProducts;
@@ -59,17 +67,53 @@ exports.resolvers = {
       }
       const user = await User.findOne({
         username: currentUser.username
-      }).populate({
-        path: "favorites",
-        model: "Product"
-      });
+      })
+        .populate({
+          path: "favorites",
+          model: "Product"
+        })
+        .populate({
+          path: "cart",
+          model: "Order"
+        });
       return user;
     }
   },
   Mutation: {
+    createOrder: async (
+      root,
+      { productId, userId, quantity },
+      { Product, Order, User }
+    ) => {
+      const userOrdered = await User.findOne({ _id: userId });
+
+      const productOrdered = await Product.findOne({ _id: productId });
+      const newOrder = await new Order({
+        product: productOrdered,
+        user: userOrdered,
+        quantity
+      })
+
+        .populate({
+          path: "product",
+          model: "Product"
+        })
+        .populate({
+          path: "user",
+          model: "User"
+        })
+        .save();
+      const userCartUpdate = await User.findOneAndUpdate(
+        { _id: userId },
+        { $push: { cart: newOrder } }
+      );
+
+      return newOrder;
+    },
+
     addProduct: async (
       root,
-      { name, imageUrl, description, category, instructions, username },
+      { name, imageUrl, description, category, username, price },
       { Product }
     ) => {
       const newProduct = await new Product({
@@ -77,8 +121,8 @@ exports.resolvers = {
         imageUrl,
         description,
         category,
-        instructions,
-        username
+        username,
+        price
       }).save();
       return newProduct;
     },
@@ -114,12 +158,12 @@ exports.resolvers = {
 
     updateUserProduct: async (
       root,
-      { _id, name, imageUrl, description, category },
+      { _id, name, imageUrl, description, category, price },
       { Product }
     ) => {
       const updatedProduct = await Product.findOneAndUpdate(
         { _id },
-        { $set: { name, imageUrl, category, description } },
+        { $set: { name, imageUrl, category, description, price } },
         { new: true }
       );
       return updatedProduct;

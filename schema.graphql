@@ -4,10 +4,10 @@ type Product {
   imageUrl: String!
   category: String!
   description: String!
-  instructions: String!
   createdDate: String
   likes: Int
-  username: String
+  username: String!
+  price: Int!
 }
 
 type User {
@@ -17,6 +17,16 @@ type User {
   email: String!
   joinDate: String
   favorites: [Product]
+  cart: [Order]
+}
+
+type Order {
+  _id: ID!
+  product: [Product!]
+  quantity: Int!
+  user: [User!]
+  createdAt: String
+  updatedAt: String
 }
 
 type Query {
@@ -24,8 +34,11 @@ type Query {
   getProduct(_id: ID!): Product
   searchProduct(searchTerm: String): [Product]
 
-  getCurrentUser: User
+  getCurrentUser: [User]
   getUserProducts(username: String!): [Product]
+
+  getAllOrders: [Order]
+  getOrder(_id: ID!): Order
 }
 
 type Token {
@@ -33,13 +46,15 @@ type Token {
 }
 
 type Mutation {
+  createOrder(productId: ID!, userId: ID!, quantity: Int!): Order
+
   addProduct(
     name: String!
     imageUrl: String!
     description: String!
     category: String!
-    instructions: String!
-    username: String
+    username: String!
+    price: Int!
   ): Product
 
   deleteUserProduct(_id: ID): Product
@@ -50,6 +65,7 @@ type Mutation {
     imageUrl: String!
     description: String!
     category: String!
+    price: Int!
   ): Product
 
   likeProduct(_id: ID!, username: String!): Product

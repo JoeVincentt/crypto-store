@@ -22,8 +22,14 @@ const UserSchema = new Schema({
   },
   favorites: {
     type: [Schema.Types.ObjectId],
-    ref: "Recipe"
-  }
+    ref: "Product"
+  },
+  cart: [
+    {
+      type: [Schema.Types.ObjectId],
+      ref: "Order"
+    }
+  ]
 });
 
 UserSchema.pre("save", function(next) {

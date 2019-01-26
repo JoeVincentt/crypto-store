@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 //Mongoose Models
 const Product = require("./models/Product");
 const User = require("./models/User");
+const Order = require("./models/Order");
 
 //GraphQL Types And Resolvers
 const typeDefs = gql`
@@ -46,6 +47,7 @@ const server = new ApolloServer({
   context: ({ req }) => ({
     User,
     Product,
+    Order,
     currentUser: req.currentUser
   })
 });
