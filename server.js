@@ -4,7 +4,6 @@ const fs = require("fs");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-// const bodyParser = require("body-parser");
 
 //Mongoose Models
 const Product = require("./models/Product");

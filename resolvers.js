@@ -169,16 +169,12 @@ exports.resolvers = {
       return updatedProduct;
     },
 
-    signinUser: async (
-      root,
-      { email, password, passwordConfirmation },
-      { User }
-    ) => {
-      if (password !== passwordConfirmation) {
-        throw new Error("Password Confirmation Failed");
-      }
+    signinUser: async (root, { email, password }, { User }) => {
+      // if (password !== passwordConfirmation) {
+      //   throw new Error("Password Confirmation Failed");
+      // }
 
-      const user = await User.findOne({ email: email });
+      const user = await User.findOne({ email });
       console.log(user);
       if (!user) {
         throw new Error("User not found");

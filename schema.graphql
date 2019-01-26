@@ -34,7 +34,7 @@ type Query {
   getProduct(_id: ID!): Product
   searchProduct(searchTerm: String): [Product]
 
-  getCurrentUser: [User]
+  getCurrentUser: User
   getUserProducts(username: String!): [Product]
 
   getAllOrders: [Order]
@@ -72,11 +72,7 @@ type Mutation {
 
   unlikeProduct(_id: ID!, username: String!): Product
 
-  signinUser(
-    email: String!
-    password: String!
-    passwordConfirmation: String!
-  ): Token
+  signinUser(email: String!, password: String!): Token
 
   signupUser(
     username: String!
