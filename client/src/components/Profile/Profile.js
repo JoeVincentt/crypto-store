@@ -4,7 +4,7 @@ import UserProducts from "./UserProducts";
 import withAuth from "../withAuth";
 
 const Profile = ({ session }) => (
-  <div className="App">
+  <div className="container center-align">
     <UserInfo session={session} />
     <UserProducts username={session.getCurrentUser.username} />
   </div>

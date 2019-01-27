@@ -20,20 +20,25 @@ class Search extends Component {
     return (
       <ApolloConsumer>
         {client => (
-          <div className="App">
-            <input
-              type="search"
-              className="search"
-              placeholder="Search Products..."
-              onChange={async event => {
-                event.persist();
-                const { data } = await client.query({
-                  query: SEARCH_PRODUCT,
-                  variables: { searchTerm: event.target.value }
-                });
-                this.handleChange(data);
-              }}
-            />
+          <div className="container center-align">
+            <div className="row">
+              <div className="col s6 offset-s3">
+                <input
+                  type="search"
+                  className="search"
+                  placeholder="Search Products..."
+                  onChange={async event => {
+                    event.persist();
+                    const { data } = await client.query({
+                      query: SEARCH_PRODUCT,
+                      variables: { searchTerm: event.target.value }
+                    });
+                    this.handleChange(data);
+                  }}
+                />
+              </div>
+            </div>
+
             <ul>
               {searchResults.map(product => (
                 <SearchProduct key={product._id} {...product} />

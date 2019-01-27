@@ -14,7 +14,7 @@ const formatDate = date => {
 };
 
 const UserInfo = ({ session }) => (
-  <div className="App">
+  <div className="container center-align">
     <h3>User Info</h3>
     <p>Username: {session.getCurrentUser.username}</p>
     <p>Email: {session.getCurrentUser.email}</p>

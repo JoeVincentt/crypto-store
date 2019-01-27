@@ -31,10 +31,10 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <h1 className="main-title">
+      <div className="container center-align">
+        <h2>
           Find Product You <strong>Love</strong>
-        </h1>
+        </h2>
         <Query query={GET_ALL_PRODUCTS}>
           {({ data, loading, error }) => {
             if (loading) return <Spinner />;
@@ -42,7 +42,7 @@ class App extends Component {
 
             const { on } = this.state;
             return (
-              <ProductList pose={on ? "shown" : "hidden"} className="cards">
+              <ProductList pose={on ? "shown" : "hidden"} className="card">
                 {data.getAllProducts.map(product => (
                   <ProductItem {...product} key={product._id} />
                 ))}

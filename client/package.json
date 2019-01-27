@@ -11,6 +11,7 @@
     "react-apollo": "^2.4.0",
     "react-ckeditor-component": "^1.1.0",
     "react-dom": "^16.7.0",
+    "react-icons": "^3.3.0",
     "react-materialize": "^2.6.0",
     "react-moment": "^0.8.4",
     "react-pose": "^4.0.6",

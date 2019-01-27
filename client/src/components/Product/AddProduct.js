@@ -5,10 +5,11 @@ import {
   GET_ALL_PRODUCTS,
   GET_USER_PRODUCTS
 } from "../../queries/index";
-import CKEditor from "react-ckeditor-component";
+// import CKEditor from "react-ckeditor-component";
 import Error from "../Error";
 import { withRouter } from "react-router-dom";
 import withAuth from "../withAuth";
+import { Input, Row } from "react-materialize";
 
 const initialState = {
   name: "",
@@ -50,9 +51,8 @@ class AddProduct extends Component {
   };
 
   validateForm = () => {
-    const { name, imageUrl, category, description, instructions } = this.state;
-    const isInvalid =
-      !name || !category || !description || !instructions || !imageUrl;
+    const { name, imageUrl, category, description } = this.state;
+    const isInvalid = !name || !category || !description || !imageUrl;
     return isInvalid;
   };
 
@@ -93,71 +93,92 @@ class AddProduct extends Component {
       >
         {(addProduct, { data, loading, error }) => {
           return (
-            <div className="App">
-              <h2 className="App"> Add Product</h2>
-              <form
-                className="form"
-                onSubmit={event => this.handleSubmit(event, addProduct)}
-              >
-                <label htmlFor="name">Product Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Add Name"
-                  onChange={this.handleChange}
-                  value={name}
-                />
-                <label htmlFor="imageUrl">Product Image</label>
-                <input
-                  type="text"
-                  name="imageUrl"
-                  placeholder="Add Image URL"
-                  onChange={this.handleChange}
-                  value={imageUrl}
-                />
-                <label htmlFor="category">Category of Product</label>
-                <select
-                  name="category"
-                  onChange={this.handleChange}
-                  value={category}
+            <div className="container center-align">
+              <h2 className=""> Add Product</h2>
+              <div className="row">
+                <form
+                  className="col s12"
+                  onSubmit={event => this.handleSubmit(event, addProduct)}
                 >
-                  <option value="Other">Other</option>
-                  <option value="Groceries">Groceries</option>
-                  <option value="Home">Home</option>
-                  <option value="Pets">Pets</option>
-                </select>
-                <label htmlFor="description">Product Description</label>
-                <input
-                  type="text"
-                  name="description"
-                  placeholder="Add Description"
-                  onChange={this.handleChange}
-                  value={description}
-                />
-                <label htmlFor="price">Product Price</label>
-                <input
-                  type="number"
-                  name="price"
-                  placeholder="Add Price"
-                  onChange={this.handleChange}
-                  value={price}
-                />
-                {/* <label htmlFor="instructions">Add instructions</label>
+                  <div className="row">
+                    <div className="input-field col s6 offset-s3 center-align">
+                      <label htmlFor="name">Product Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        className="validate"
+                        onChange={this.handleChange}
+                        value={name}
+                      />
+                    </div>{" "}
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s6 offset-s3 center-align">
+                      <label htmlFor="imageUrl">Product Image</label>
+                      <input
+                        type="text"
+                        name="imageUrl"
+                        className="validate"
+                        onChange={this.handleChange}
+                        value={imageUrl}
+                      />
+                    </div>{" "}
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s6 offset-s3">
+                      <label htmlFor="description">Product Description</label>
+                      <input
+                        type="text"
+                        name="description"
+                        className="validate"
+                        onChange={this.handleChange}
+                        value={description}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s6 offset-s3">
+                      <label htmlFor="price">Product Price</label>
+                      <input
+                        type="number"
+                        name="price"
+                        className="validate"
+                        onChange={this.handleChange}
+                        value={price}
+                      />
+                    </div>
+                  </div>
+                  <Row>
+                    <div className="input-field col s6 offset-s3">
+                      <Input
+                        s={12}
+                        type="select"
+                        label="Materialize Select"
+                        defaultValue="1"
+                      >
+                        <option value="1">Home</option>
+                        <option value="2">Groceries</option>
+                        <option value="3">Pets</option>
+                      </Input>
+                    </div>
+                  </Row>
+
+                  <button
+                    type="submit"
+                    className="btn"
+                    disabled={loading || this.validateForm()}
+                  >
+                    Submit
+                  </button>
+                  {error && <Error error={error} />}
+                </form>
+              </div>
+              {/* <label htmlFor="instructions">Add instructions</label>
                 <CKEditor
                   name="instructions"
                   content={instructions}
                   events={{ change: this.handleEditorChange }}
                 /> */}
-
-                <button
-                  disabled={loading || this.validateForm()}
-                  type="submit"
-                  className="button-primary"
-                >
-                  Submit
-                </button>
-                {error && <Error error={error} />}
-              </form>
             </div>
           );
         }}

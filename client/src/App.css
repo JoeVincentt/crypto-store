@@ -1,0 +1,35 @@
+/* MainNavigation.js */
+
+.brand-logo {
+  padding-left: 15px !important;
+}
+
+nav ul li a:hover {
+  color: orange !important;
+}
+nav ul li.active {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+nav {
+  background: #141e30; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to top,
+    #243b55,
+    #141e30
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to top,
+    #243b55,
+    #141e30
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+/* Auth.js */
+
+.btn {
+  margin: 3px;
+}
+
+.auth-form {
+  margin: 20px;
+}

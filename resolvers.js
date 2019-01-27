@@ -24,6 +24,7 @@ exports.resolvers = {
       const order = await Order.findOne({ _id });
       return order;
     },
+
     getAllProducts: async (root, args, { Product }) => {
       const allProducts = await Product.find().sort({ createdDate: "desc" });
       return allProducts;
@@ -76,6 +77,22 @@ exports.resolvers = {
           path: "cart",
           model: "Order"
         });
+      // console.log(user);
+      return user;
+    },
+    getUser: async (root, { _id }, { User }) => {
+      const user = await User.findOne({
+        _id
+      })
+        .populate({
+          path: "favorites",
+          model: "Product"
+        })
+        .populate({
+          path: "cart",
+          model: "Order"
+        });
+      // console.log(user);
       return user;
     }
   },
@@ -123,7 +140,16 @@ exports.resolvers = {
         category,
         username,
         price
-      }).save();
+      })
+        .populate({
+          path: "product",
+          model: "Product"
+        })
+        .populate({
+          path: "user",
+          model: "User"
+        })
+        .save();
       return newProduct;
     },
 
@@ -175,7 +201,7 @@ exports.resolvers = {
       // }
 
       const user = await User.findOne({ email });
-      console.log(user);
+      // console.log(user);
       if (!user) {
         throw new Error("User not found");
       }

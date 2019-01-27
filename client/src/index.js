@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, Component } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
@@ -21,6 +21,7 @@ import Search from "./components/Product/Search";
 import AddProduct from "./components/Product/AddProduct";
 import ProductPage from "./components/Product/ProductPage";
 import Profile from "./components/Profile/Profile";
+import Cart from "./components/Cart/Cart";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -45,26 +46,40 @@ const client = new ApolloClient({
   }
 });
 
-const Root = ({ refetch, session }) => (
-  <Router>
-    <Fragment>
-      <Navbar session={session} />
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route path="/search" component={Search} />
-        <Route path="/signin" render={() => <Signin refetch={refetch} />} />
-        <Route path="/signup" render={() => <Signup refetch={refetch} />} />
-        <Route
-          path="/product/add"
-          render={() => <AddProduct session={session} />}
-        />
-        <Route path="/products/:_id" component={ProductPage} />
-        <Route path="/profile" render={() => <Profile session={session} />} />
-        <Redirect to="/" />
-      </Switch>
-    </Fragment>
-  </Router>
-);
+class Root extends Component {
+  render() {
+    const { refetch, session } = this.props;
+    return (
+      <Router>
+        <Fragment>
+          <Navbar session={session} />
+          <Switch>
+            <Route exact path="/" component={App} />
+            <Route path="/search" component={Search} />
+            <Route path="/signin" render={() => <Signin refetch={refetch} />} />
+            <Route path="/signup" render={() => <Signup refetch={refetch} />} />
+            <Route
+              path="/product/add"
+              render={() => <AddProduct session={session} />}
+            />
+            <Route path="/products/:_id" component={ProductPage} />
+            <Route
+              path="/profile"
+              exact
+              render={() => <Profile session={session} />}
+            />
+            <Route
+              path="/profile/cart"
+              exact
+              render={() => <Cart session={session} />}
+            />
+            <Redirect to="/" />
+          </Switch>
+        </Fragment>
+      </Router>
+    );
+  }
+}
 
 const RootWithSession = withSession(Root);
 

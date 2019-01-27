@@ -15,8 +15,8 @@ export const GET_ALL_PRODUCTS = gql`
 `;
 
 export const GET_PRODUCT = gql`
-  query($_id: ID!) {
-    getProduct(_id: $_id) {
+  query($prodId: ID!) {
+    getProduct(_id: $prodId) {
       ...CompleteProduct
     }
   }
@@ -33,7 +33,7 @@ export const SEARCH_PRODUCT = gql`
   }
 `;
 
-//Recipies Mutations
+//Products Mutations
 export const ADD_PRODUCT = gql`
   mutation(
     $name: String!
@@ -122,6 +122,16 @@ export const GET_CURRENT_USER = gql`
         _id
         name
       }
+      cart {
+        _id
+        product {
+          _id
+        }
+        user {
+          _id
+        }
+        quantity
+      }
     }
   }
 `;
@@ -136,6 +146,14 @@ export const GET_USER_PRODUCTS = gql`
       category
       description
       price
+    }
+  }
+`;
+
+export const GET_USER = gql`
+  query($userId: ID!) {
+    getUser(_id: $userId) {
+      username
     }
   }
 `;

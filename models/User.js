@@ -24,12 +24,10 @@ const UserSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: "Product"
   },
-  cart: [
-    {
-      type: [Schema.Types.ObjectId],
-      ref: "Order"
-    }
-  ]
+  cart: {
+    type: [Schema.Types.ObjectId],
+    ref: "Order"
+  }
 });
 
 UserSchema.pre("save", function(next) {

@@ -115,14 +115,14 @@ class UserProducts extends Component {
                       return (
                         <div>
                           <button
-                            className="button-primary"
+                            className="btn"
                             onClick={() => this.loadProduct(product)}
                           >
                             Update
                           </button>
                           <p
                             onClick={() => this.handleDelete(deleteUserProduct)}
-                            className="delete-button"
+                            className="btn red"
                           >
                             {attrs.loading ? "deleting..." : "X"}
                           </p>

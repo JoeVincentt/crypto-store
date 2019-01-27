@@ -37,6 +37,8 @@ type Query {
   getCurrentUser: User
   getUserProducts(username: String!): [Product]
 
+  getUser(_id: ID!): User
+
   getAllOrders: [Order]
   getOrder(_id: ID!): Order
 }

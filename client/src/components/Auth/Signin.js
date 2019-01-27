@@ -39,38 +39,79 @@ class Signin extends Component {
   render() {
     const { email, password } = this.state;
     return (
-      <div className="App">
-        <h2 className="App">Signin</h2>
+      <div className="container center-align">
+        <h2 className="center">Signin</h2>
         <Mutation mutation={SIGNIN_USER} variables={{ email, password }}>
           {(signinUser, { data, loading, error }) => {
             return (
-              <form
-                className="form"
-                onSubmit={event => this.handleSubmit(event, signinUser)}
-              >
-                <input
-                  type="text"
-                  name="email"
-                  placeholder="Email"
-                  onChange={this.handleChange}
-                  value={email}
-                />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={this.handleChange}
-                  value={password}
-                />
-                <button
-                  type="submit"
-                  className="button-primary"
-                  disabled={loading || this.validateForm()}
+              // <form
+              //   className="form"
+              //   onSubmit={event => this.handleSubmit(event, signinUser)}
+              // >
+              //   <input
+              //     type="text"
+              //     name="email"
+              //     placeholder="Email"
+              //     onChange={this.handleChange}
+              //     value={email}
+              //   />
+              //   <input
+              //     type="password"
+              //     name="password"
+              //     placeholder="Password"
+              //     onChange={this.handleChange}
+              //     value={password}
+              //   />
+              //   <button
+              //     type="submit"
+              //     className="button-primary"
+              //     disabled={loading || this.validateForm()}
+              //   >
+              //     Submit
+              //   </button>
+              //   {error && <Error error={error} />}
+              // </form>
+              <div className="row">
+                <form
+                  className="col s12"
+                  onSubmit={event => this.handleSubmit(event, signinUser)}
                 >
-                  Submit
-                </button>
-                {error && <Error error={error} />}
-              </form>
+                  <div className="row">
+                    <div className="input-field col s6 offset-s3 center-align">
+                      <input
+                        id="email"
+                        type="email"
+                        className="validate"
+                        name="email"
+                        onChange={this.handleChange}
+                        value={email}
+                      />
+                      <label htmlFor="email">Email</label>
+                    </div>{" "}
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s6 offset-s3">
+                      <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        className="validate"
+                        onChange={this.handleChange}
+                        value={password}
+                      />
+                      <label htmlFor="password">Password</label>
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn"
+                    disabled={loading || this.validateForm()}
+                  >
+                    Submit
+                  </button>
+                  {error && <Error error={error} />}
+                </form>
+              </div>
             );
           }}
         </Mutation>
