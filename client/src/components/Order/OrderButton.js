@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Input } from "react-materialize";
 import { Mutation } from "react-apollo";
 import Error from "../Error";
-import { CREATE_ORDER, GET_USER, GET_CURRENT_USER } from "../../queries/index";
+import { CREATE_ORDER, GET_CURRENT_USER } from "../../queries/index";
 
 const initialState = {
   quantity: 1

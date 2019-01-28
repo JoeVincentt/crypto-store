@@ -14,10 +14,11 @@ import { Input, Row } from "react-materialize";
 const initialState = {
   name: "",
   imageUrl: "",
-  category: "Breakfast",
+  category: "Home",
   description: "",
   instructions: "",
-  username: ""
+  username: "",
+  price: ""
 };
 
 class AddProduct extends Component {
@@ -35,6 +36,9 @@ class AddProduct extends Component {
     this.setState({
       [event.target.name]: event.target.value
     });
+  };
+  priceChangeHandler = event => {
+    this.setState({ price: +event.target.value });
   };
 
   handleEditorChange = event => {
@@ -143,7 +147,7 @@ class AddProduct extends Component {
                         type="number"
                         name="price"
                         className="validate"
-                        onChange={this.handleChange}
+                        onChange={this.priceChangeHandler}
                         value={price}
                       />
                     </div>
@@ -153,8 +157,10 @@ class AddProduct extends Component {
                       <Input
                         s={12}
                         type="select"
-                        label="Materialize Select"
+                        label="Category"
+                        name="category"
                         defaultValue="1"
+                        onChange={this.handleChange}
                       >
                         <option value="1">Home</option>
                         <option value="2">Groceries</option>

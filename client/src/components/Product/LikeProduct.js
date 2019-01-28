@@ -46,12 +46,12 @@ class LikeProduct extends Component {
     const { _id } = this.props;
     const { getProduct } = cache.readQuery({
       query: GET_PRODUCT,
-      variables: { _id }
+      variables: { prodId: _id }
     });
 
     cache.writeQuery({
       query: GET_PRODUCT,
-      variables: { _id },
+      variables: { prodId: _id },
       data: {
         getProduct: { ...getProduct, likes: likeProduct.likes + 1 }
       }
@@ -62,12 +62,12 @@ class LikeProduct extends Component {
     const { _id } = this.props;
     const { getProduct } = cache.readQuery({
       query: GET_PRODUCT,
-      variables: { _id }
+      variables: { prodId: _id }
     });
 
     cache.writeQuery({
       query: GET_PRODUCT,
-      variables: { _id },
+      variables: { prodId: _id },
       data: {
         getProduct: { ...getProduct, likes: unlikeProduct.likes - 1 }
       }
