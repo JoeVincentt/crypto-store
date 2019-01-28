@@ -49,6 +49,7 @@ type Token {
 
 type Mutation {
   createOrder(prodId: ID!, userId: ID!, quantity: Int!): Order
+  deleteOrder(userId: ID!, orderId: ID!): Order
 
   addProduct(
     name: String!

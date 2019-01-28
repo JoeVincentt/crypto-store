@@ -42,6 +42,13 @@ export const CREATE_ORDER = gql`
     }
   }
 `;
+export const DELETE_ORDER = gql`
+  mutation($userId: ID!, $orderId: ID!) {
+    deleteOrder(userId: $userId, orderId: $orderId) {
+      _id
+    }
+  }
+`;
 
 //Products Mutations
 export const ADD_PRODUCT = gql`

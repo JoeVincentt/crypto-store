@@ -19,7 +19,7 @@ class OrderButton extends Component {
     e.preventDefault();
     createOrder().then(({ data }) => {
       this.setState({ initialState });
-      console.log(data);
+      window.Materialize.toast("Added to Cart!", 5000, "blue rounded");
     });
   };
 

@@ -128,6 +128,16 @@ exports.resolvers = {
       return newOrder;
     },
 
+    deleteOrder: async (root, { userId, orderId }, { User, Order }) => {
+      const order = await Order.findOneAndRemove({ _id: orderId });
+
+      const userCartUpdate = await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { cart: orderId } }
+      );
+      return order;
+    },
+
     addProduct: async (
       root,
       { name, imageUrl, description, category, username, price },

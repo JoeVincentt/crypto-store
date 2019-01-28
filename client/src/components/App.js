@@ -42,7 +42,7 @@ class App extends Component {
 
             const { on } = this.state;
             return (
-              <ProductList pose={on ? "shown" : "hidden"} className="card">
+              <ProductList pose={on ? "shown" : "hidden"} className="row">
                 {data.getAllProducts.map(product => (
                   <ProductItem {...product} key={product._id} />
                 ))}
