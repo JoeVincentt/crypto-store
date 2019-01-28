@@ -4,17 +4,19 @@ import { Query } from "react-apollo";
 import { GET_PRODUCT } from "../../queries/index";
 import LikeProduct from "./LikeProduct";
 import Spinner from "../Spinner";
+import OrderButton from "../Order/OrderButton";
 
-const ProductPage = ({ match }) => {
-  const { _id } = match.params;
+const ProductPage = ({ match, session }) => {
+  const prodId = match.params._id;
+  const userId = session.getCurrentUser._id;
   return (
-    <Query query={GET_PRODUCT} variables={{ _id }}>
+    <Query query={GET_PRODUCT} variables={{ prodId }}>
       {({ data, loading, error }) => {
         if (loading) return <Spinner />;
         if (error) return <div>Error</div>;
-        // console.log(data);
+        console.log(data);
         return (
-          <div className="App">
+          <div className="container center-align">
             <div
               style={{
                 background: `url(${
@@ -43,9 +45,9 @@ const ProductPage = ({ match }) => {
                   </span>
                 </p>
               </div>
-              <blockquote className="product-description">
+              <div className="transparent product-description">
                 {data.getProduct.description}
-              </blockquote>
+              </div>
               <h3 className="product-instructions__title">Instructions</h3>
               <div
                 className="product-instructions"
@@ -53,8 +55,9 @@ const ProductPage = ({ match }) => {
                   __html: data.getProduct.instructions
                 }}
               />{" "}
-              <LikeProduct _id={_id} />
+              <LikeProduct _id={prodId} />
             </div>
+            <OrderButton prodId={prodId} userId={userId} />
           </div>
         );
       }}

@@ -11,7 +11,7 @@ const SearchItem = ({ _id, name, likes }) => {
         </div>
         <div className="card-stacked">
           <div className="card-content">
-            <Link to={`/recipes/${_id}`}>
+            <Link to={`/products/${_id}`}>
               <h4>{name}</h4>
             </Link>
             <p>

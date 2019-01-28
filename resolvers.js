@@ -99,12 +99,12 @@ exports.resolvers = {
   Mutation: {
     createOrder: async (
       root,
-      { productId, userId, quantity },
+      { prodId, userId, quantity },
       { Product, Order, User }
     ) => {
       const userOrdered = await User.findOne({ _id: userId });
 
-      const productOrdered = await Product.findOne({ _id: productId });
+      const productOrdered = await Product.findOne({ _id: prodId });
       const newOrder = await new Order({
         product: productOrdered,
         user: userOrdered,

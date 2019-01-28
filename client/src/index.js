@@ -62,7 +62,10 @@ class Root extends Component {
               path="/product/add"
               render={() => <AddProduct session={session} />}
             />
-            <Route path="/products/:_id" component={ProductPage} />
+            <Route
+              path="/products/:_id"
+              render={() => <ProductPage session={session} />}
+            />
             <Route
               path="/profile"
               exact

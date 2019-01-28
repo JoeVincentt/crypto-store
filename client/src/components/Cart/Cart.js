@@ -24,14 +24,14 @@ const Cart = ({ session }) => {
           {({ data, loading, error }) => {
             if (loading) return <Spinner />;
             if (error) return <div>Error</div>;
-            console.log(data);
+            // console.log(data);
             const name = data.getProduct.name;
             return (
               <Query query={GET_USER} variables={{ userId: item.user[0]._id }}>
                 {({ data, loading, error }) => {
                   if (loading) return <Spinner />;
                   if (error) return <div>Error</div>;
-                  console.log(data);
+                  // console.log(data);
                   const username = data.getUser.username;
                   return (
                     <ul>

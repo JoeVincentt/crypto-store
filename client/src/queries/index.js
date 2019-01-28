@@ -33,6 +33,16 @@ export const SEARCH_PRODUCT = gql`
   }
 `;
 
+//Order Mutation
+
+export const CREATE_ORDER = gql`
+  mutation($prodId: ID!, $userId: ID!, $quantity: Int!) {
+    createOrder(prodId: $prodId, userId: $userId, quantity: $quantity) {
+      _id
+    }
+  }
+`;
+
 //Products Mutations
 export const ADD_PRODUCT = gql`
   mutation(
@@ -115,6 +125,7 @@ export const UNLIKE_PRODUCT = gql`
 export const GET_CURRENT_USER = gql`
   query {
     getCurrentUser {
+      _id
       username
       joinDate
       email
