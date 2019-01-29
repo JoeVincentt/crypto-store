@@ -137,6 +137,14 @@ exports.resolvers = {
       );
       return order;
     },
+    updateOrderQuantity: async (root, { orderId, quantity }, { Order }) => {
+      const order = await Order.findOneAndUpdate(
+        { _id: orderId },
+        { $set: { quantity } },
+        { new: true }
+      );
+      return order;
+    },
 
     addProduct: async (
       root,

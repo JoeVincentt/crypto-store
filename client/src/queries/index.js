@@ -49,6 +49,13 @@ export const DELETE_ORDER = gql`
     }
   }
 `;
+export const UPDATE_ORDER_QUANTITY = gql`
+  mutation($orderId: ID!, $quantity: Int!) {
+    updateOrderQuantity(orderId: $orderId, quantity: $quantity) {
+      _id
+    }
+  }
+`;
 
 //Products Mutations
 export const ADD_PRODUCT = gql`

@@ -1,12 +1,15 @@
 import React from "react";
 import Spinner from "../Spinner";
-import { Query, Mutation } from "react-apollo";
+import { Query } from "react-apollo";
 import {
   GET_USER,
   GET_PRODUCT,
   DELETE_ORDER,
-  GET_CURRENT_USER
+  GET_CURRENT_USER,
+  UPDATE_ORDER_QUANTITY
 } from "../../queries/index";
+import DeleteCartItem from "./DeleteCartItem";
+import UpdateCartItemQuantity from "./UpdateCartItemQuantity";
 
 const handleDelete = deleteOrder => {
   const confirmDelete = window.confirm(
@@ -58,44 +61,19 @@ const Cart = ({ session }) => {
                           seller: {username}
                         </li>
                       </ul>
-                      <Mutation
-                        mutation={DELETE_ORDER}
-                        variables={{
-                          userId: item.user[0]._id,
-                          orderId: item._id
-                        }}
-                        refetchQueries={() => [
-                          {
-                            query: GET_CURRENT_USER
-                          }
-                        ]}
-                        // update={(cache, { data: { deleteOrder } }) => {
-                        //   const { getCurrentUser } = cache.readQuery({
-                        //     query: GET_CURRENT_USER
-                        //   });
-
-                        //   getCurrentUser.filter(
-                        //     item => item._id !== deleteOrder._id
-                        //   );
-
-                        //   cache.writeQuery({
-                        //     query: getCurrentUser,
-
-                        //     data
-                        //   });
-                        // }}
-                      >
-                        {(deleteOrder, attrs = {}) => {
-                          return (
-                            <p
-                              onClick={() => handleDelete(deleteOrder)}
-                              className="btn red"
-                            >
-                              {attrs.loading ? "deleting..." : "X"}
-                            </p>
-                          );
-                        }}
-                      </Mutation>
+                      <UpdateCartItemQuantity
+                        quantity={item.quantity}
+                        orderId={item._id}
+                        UPDATE_ORDER_QUANTITY={UPDATE_ORDER_QUANTITY}
+                        GET_CURRENT_USER={GET_CURRENT_USER}
+                      />
+                      <DeleteCartItem
+                        DELETE_ORDER={DELETE_ORDER}
+                        GET_CURRENT_USER={GET_CURRENT_USER}
+                        handleDelete={handleDelete}
+                        userId={item.user[0]._id}
+                        orderId={item._id}
+                      />
                     </div>
                   );
                 }}
