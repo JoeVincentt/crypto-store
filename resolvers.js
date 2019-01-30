@@ -113,11 +113,11 @@ exports.resolvers = {
 
         .populate({
           path: "product",
-          model: "Product"
+          model: Product
         })
         .populate({
           path: "user",
-          model: "User"
+          model: User
         })
         .save();
       const userCartUpdate = await User.findOneAndUpdate(

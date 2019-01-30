@@ -1,16 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Moment from "react-moment";
 
 const formatDate = date => {
+  console.log(date);
   const options = {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric"
   };
-  const newDate = new Date(date).toLocaleDateString("de-DE", options);
-  const newTime = new Date(date).toUTCString();
-  return `${newDate} at ${newTime} ----  ${date}`;
+
+  const newDate = new Date(date - 10800000).toUTCString();
+  const localDate = new Date(newDate).toLocaleDateString();
+  const localTime = new Date(newDate).toLocaleTimeString();
+
+  return `Full Date: ${newDate}--Local Date: ${localDate}--LocalTime: ${localTime}-- From MongoDB: ${date}`;
 };
 
 const UserInfo = ({ session }) => (

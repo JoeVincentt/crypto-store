@@ -6,6 +6,7 @@ import { GET_CURRENT_USER } from "../queries/index";
 const withAuth = conditionFunc => Component => props => (
   <Query query={GET_CURRENT_USER}>
     {({ data, loading }) => {
+      console.log(data);
       if (loading) return null;
       return conditionFunc(data) ? (
         <Component {...props} />

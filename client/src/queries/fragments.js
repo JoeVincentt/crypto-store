@@ -8,6 +8,7 @@ export const productFragments = {
       imageUrl
       category
       description
+      price
       createdDate
       likes
       username

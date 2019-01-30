@@ -9,6 +9,7 @@ import {
 } from "../../queries/index";
 import { Link } from "react-router-dom";
 import Spinner from "../Spinner";
+import { Modal, Input } from "react-materialize";
 
 class UserProducts extends Component {
   state = {
@@ -17,14 +18,19 @@ class UserProducts extends Component {
     imageUrl: "",
     category: "Other",
     description: "",
-    price: 0,
-    modal: false
+    price: 0
   };
 
   handleChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
+    if (event.target.name === "price") {
+      this.setState({
+        price: +event.target.value
+      });
+    } else {
+      this.setState({
+        [event.target.name]: event.target.value
+      });
+    }
   };
 
   handleDelete = deleteUserProduct => {
@@ -42,21 +48,16 @@ class UserProducts extends Component {
     event.preventDefault();
     updateUserProduct().then(({ data }) => {
       console.log(data);
-      this.closeModal();
     });
   };
 
-  loadProduct = product => {
-    this.setState({ ...product, modal: true });
-  };
-
-  closeModal = () => {
-    this.setState({ modal: false });
+  loadProduct = (e, product) => {
+    e.preventDefault();
+    this.setState({ ...product });
   };
 
   render() {
     const { username } = this.props;
-    const { modal } = this.state;
     return (
       <Query query={GET_USER_PRODUCTS} variables={{ username }}>
         {({ data, loading, error }) => {
@@ -65,14 +66,6 @@ class UserProducts extends Component {
           // console.log(data);
           return (
             <ul>
-              {modal && (
-                <EditProductModal
-                  handleSubmit={this.handleSubmit}
-                  product={this.state}
-                  closeModal={this.closeModal}
-                  handleChange={this.handleChange}
-                />
-              )}
               <h3>Your Products</h3>
               {!data.getUserProducts.length && (
                 <p>
@@ -114,12 +107,25 @@ class UserProducts extends Component {
                     {(deleteUserProduct, attrs = {}) => {
                       return (
                         <div>
-                          <button
-                            className="btn"
-                            onClick={() => this.loadProduct(product)}
+                          <Modal
+                            header="Update Product"
+                            trigger={
+                              <button className="btn modal-trigger">
+                                <div
+                                  onClick={e => this.loadProduct(e, product)}
+                                >
+                                  {" "}
+                                  Update
+                                </div>
+                              </button>
+                            }
                           >
-                            Update
-                          </button>
+                            <EditProductModal
+                              handleSubmit={this.handleSubmit}
+                              product={this.state}
+                              handleChange={this.handleChange}
+                            />
+                          </Modal>
                           <p
                             onClick={() => this.handleDelete(deleteUserProduct)}
                             className="btn red"
@@ -140,12 +146,7 @@ class UserProducts extends Component {
   }
 }
 
-const EditProductModal = ({
-  handleSubmit,
-  product,
-  handleChange,
-  closeModal
-}) => (
+const EditProductModal = ({ handleSubmit, product, handleChange }) => (
   <Mutation
     mutation={UPDATE_USER_PRODUCT}
     variables={{
@@ -153,73 +154,64 @@ const EditProductModal = ({
       name: product.name,
       imageUrl: product.imageUrl,
       category: product.category,
-      description: product.description
+      description: product.description,
+      price: product.price
     }}
   >
-    {updateUserProduct => (
-      <div className="modal modal-open">
-        <div className="modal-inner">
-          <div className="modal-content">
-            <form
-              onSubmit={event => handleSubmit(event, updateUserProduct)}
-              className="modal-content-inner"
-            >
-              <h4>Edit Product</h4>
-              <label htmlFor="name">Product Name</label>
-              <input
-                type="text"
-                name="name"
-                onChange={handleChange}
-                value={product.name}
-              />
+    {updateUserProduct => {
+      return (
+        <form onSubmit={event => handleSubmit(event, updateUserProduct)}>
+          <label htmlFor="name">Product Name</label>
+          <input
+            type="text"
+            name="name"
+            onChange={handleChange}
+            value={product.name}
+          />
 
-              <label htmlFor="imageUrl">Product Image</label>
-              <input
-                type="text"
-                name="imageUrl"
-                onChange={handleChange}
-                value={product.imageUrl}
-              />
+          <label htmlFor="imageUrl">Product Image</label>
+          <input
+            type="text"
+            name="imageUrl"
+            onChange={handleChange}
+            value={product.imageUrl}
+          />
 
-              <label htmlFor="category">Category of Product</label>
-              <select
-                name="category"
-                onChange={handleChange}
-                value={product.category}
-              >
-                <option value="Other">Other</option>
-                <option value="Groceries">Groceries</option>
-                <option value="Home">Home</option>
-                <option value="Pets">Pets</option>
-              </select>
+          <Input
+            type="select"
+            label="Category of Product"
+            name="category"
+            value={product.category}
+            onChange={handleChange}
+          >
+            <option value="Other">Other</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Home">Home</option>
+            <option value="Pets">Pets</option>
+          </Input>
 
-              <label htmlFor="description">Product Description</label>
-              <input
-                type="text"
-                name="description"
-                onChange={handleChange}
-                value={product.description}
-              />
-              <label htmlFor="price">Product Price</label>
-              <input
-                type="number"
-                name="price"
-                onChange={handleChange}
-                value={product.price}
-              />
-
-              <hr />
-              <div className="modal-buttons">
-                <button type="submit" className="button-primary">
-                  Update
-                </button>
-                <button onClick={closeModal}>Cancel</button>
-              </div>
-            </form>
+          <label htmlFor="description">Product Description</label>
+          <input
+            type="text"
+            name="description"
+            onChange={handleChange}
+            value={product.description}
+          />
+          <label htmlFor="price">Product Price</label>
+          <input
+            type="number"
+            name="price"
+            onChange={handleChange}
+            value={product.price}
+          />
+          <div className="modal-footer">
+            <button type="submit" className="btn modal-close">
+              Update
+            </button>
           </div>
-        </div>
-      </div>
-    )}
+        </form>
+      );
+    }}
   </Mutation>
 );
 

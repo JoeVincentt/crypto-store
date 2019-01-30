@@ -19,13 +19,7 @@ class UpdateCartItemQuantity extends Component {
   };
 
   render() {
-    const {
-      quantity,
-      orderId,
-      UPDATE_ORDER_QUANTITY,
-      GET_CURRENT_USER
-    } = this.props;
-    console.log(quantity);
+    const { orderId, UPDATE_ORDER_QUANTITY, GET_CURRENT_USER } = this.props;
     const { itemQuantity } = this.state;
     return (
       <Mutation

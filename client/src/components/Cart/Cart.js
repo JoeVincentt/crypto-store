@@ -10,6 +10,7 @@ import {
 } from "../../queries/index";
 import DeleteCartItem from "./DeleteCartItem";
 import UpdateCartItemQuantity from "./UpdateCartItemQuantity";
+import ItemCheckout from "./ItemCheckout";
 
 const handleDelete = deleteOrder => {
   const confirmDelete = window.confirm(
@@ -24,6 +25,7 @@ const handleDelete = deleteOrder => {
 
 const Cart = ({ session }) => {
   const cart = session.getCurrentUser.cart;
+
   console.log(cart);
   // console.log(session.getCurrentUser);
   // console.log("Product ID:", cart[0].product[0]._id);
@@ -35,6 +37,7 @@ const Cart = ({ session }) => {
   return (
     <div className="cantainer center-align">
       <h1>Cart Items</h1>
+
       {cart.map((item, index) => (
         <Query
           key={index}
@@ -46,6 +49,8 @@ const Cart = ({ session }) => {
             if (error) return <div>Error</div>;
             // console.log(data);
             const name = data.getProduct.name;
+            const price = data.getProduct.price;
+            const quantity = item.quantity;
             return (
               <Query query={GET_USER} variables={{ userId: item.user[0]._id }}>
                 {({ data, loading, error }) => {
@@ -57,10 +62,12 @@ const Cart = ({ session }) => {
                     <div>
                       <ul>
                         <li>
-                          Product name: {name} || qty: {item.quantity} ||
-                          seller: {username}
+                          Product name: {name} || qty: {quantity} || seller:{" "}
+                          {username} || Price: {price} || Total Price:{" "}
+                          {(price * quantity).toFixed(2)}
                         </li>
                       </ul>
+                      <ItemCheckout />
                       <UpdateCartItemQuantity
                         quantity={item.quantity}
                         orderId={item._id}
