@@ -1,15 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Moment from "react-moment";
 
 const formatDate = date => {
-  console.log(date);
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  };
+  // console.log(date);
+  // const options = {
+  //   weekday: "long",
+  //   year: "numeric",
+  //   month: "long",
+  //   day: "numeric"
+  // };
 
   const newDate = new Date(date - 10800000).toUTCString();
   const localDate = new Date(newDate).toLocaleDateString();
