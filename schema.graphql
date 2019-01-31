@@ -22,9 +22,9 @@ type User {
 
 type Order {
   _id: ID!
-  product: [Product!]
+  product: [Product]
   quantity: Int!
-  user: [User!]
+  user: [User]
   createdAt: String
   updatedAt: String
 }

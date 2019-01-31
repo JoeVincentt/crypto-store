@@ -1,26 +1,40 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Divider from "react-materialize/lib/Divider";
 
-const SearchItem = ({ _id, name, likes }) => {
+const SearchItem = ({
+  _id,
+  name,
+  likes,
+  imageUrl,
+  price,
+  description,
+  username,
+  category
+}) => {
   return (
-    <div className="col s12 m7">
-      <h2 className="header">{name}</h2>
-      <div className="card horizontal">
-        <div className="card-image">
-          <img src="https://lorempixel.com/100/190/nature/6" alt="productpic" />
+    <div className="col m6 l6">
+      <div className="card medium z-depth-5">
+        <div className="card-image waves-effect waves-block waves-light">
+          <img className="activator" src={`${imageUrl}`} alt="productpic" />
         </div>
-        <div className="card-stacked">
+        <div className="container center-align">
           <div className="card-content">
-            <Link to={`/products/${_id}`}>
-              <h4>{name}</h4>
-            </Link>
+            <h4>
+              <Link to={`/products/${_id}`}> {name}</Link>
+            </h4>
             <p>
-              I am a very simple card. I am good at containing small bits of
-              information.
+              {likes}
+              <span role="img" aria-label="heart">
+                ❤️
+              </span>
             </p>
-          </div>
-          <div className="card-action">
-            <p>Likes: {likes}</p>
+
+            <Divider />
+
+            <h5>
+              Price: <strong>$ {price}</strong>{" "}
+            </h5>
           </div>
         </div>
       </div>

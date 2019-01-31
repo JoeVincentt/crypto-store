@@ -33,3 +33,12 @@ nav {
 .auth-form {
   margin: 20px;
 }
+
+/* Profile Tabs */
+.tabs .indicator {
+  background-color: #000000 !important;
+}
+.tabs .tab a,
+.tabs .tab a:active {
+  color: #000000 !important;
+}

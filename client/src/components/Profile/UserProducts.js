@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import Spinner from "../Spinner";
 import { Modal, Input } from "react-materialize";
+import { FaEdit } from "react-icons/fa";
 
 class UserProducts extends Component {
   state = {
@@ -65,80 +66,115 @@ class UserProducts extends Component {
           if (error) return <div>Error</div>;
           // console.log(data);
           return (
-            <ul>
-              <h3>Your Products</h3>
+            <div className="row">
+              <h3>Your Products</h3>{" "}
               {!data.getUserProducts.length && (
                 <p>
                   <strong>You have no products yet. Add some!</strong>
                 </p>
               )}
               {data.getUserProducts.map(product => (
-                <li key={product._id}>
-                  <Link to={`/products/${product._id}`}>
-                    {" "}
-                    <p>{product.name}</p>
-                  </Link>
-                  <p style={{ marginBottom: "0" }}>{product.likes}</p>
+                <div className="col m6" key={product._id}>
+                  <div className="card z-depth-5">
+                    <div className="card-image">
+                      <img src={`${product.imageUrl}`} alt="prodimg" />
+                    </div>
+                    <div className="card-content">
+                      <Link to={`/products/${product._id}`}>
+                        {" "}
+                        <h5>{product.name}</h5>
+                      </Link>
+                      <p>
+                        Price: <strong>$ {product.price}</strong>
+                      </p>
+                      <Mutation
+                        mutation={DELETE_USER_PRODUCT}
+                        variables={{ _id: product._id }}
+                        refetchQueries={() => [
+                          { query: GET_ALL_PRODUCTS },
+                          { query: GET_CURRENT_USER }
+                        ]}
+                        update={(cache, { data: { deleteUserProduct } }) => {
+                          const { getUserProducts } = cache.readQuery({
+                            query: GET_USER_PRODUCTS,
+                            variables: { username }
+                          });
 
-                  <Mutation
-                    mutation={DELETE_USER_PRODUCT}
-                    variables={{ _id: product._id }}
-                    refetchQueries={() => [
-                      { query: GET_ALL_PRODUCTS },
-                      { query: GET_CURRENT_USER }
-                    ]}
-                    update={(cache, { data: { deleteUserProduct } }) => {
-                      const { getUserProducts } = cache.readQuery({
-                        query: GET_USER_PRODUCTS,
-                        variables: { username }
-                      });
-
-                      cache.writeQuery({
-                        query: GET_USER_PRODUCTS,
-                        variables: { username },
-                        data: {
-                          getUserProducts: getUserProducts.filter(
-                            product => product._id !== deleteUserProduct._id
-                          )
-                        }
-                      });
-                    }}
-                  >
-                    {(deleteUserProduct, attrs = {}) => {
-                      return (
-                        <div>
-                          <Modal
-                            header="Update Product"
-                            trigger={
-                              <button className="btn modal-trigger">
-                                <div
-                                  onClick={e => this.loadProduct(e, product)}
-                                >
-                                  {" "}
-                                  Update
-                                </div>
-                              </button>
+                          cache.writeQuery({
+                            query: GET_USER_PRODUCTS,
+                            variables: { username },
+                            data: {
+                              getUserProducts: getUserProducts.filter(
+                                product => product._id !== deleteUserProduct._id
+                              )
                             }
-                          >
-                            <EditProductModal
-                              handleSubmit={this.handleSubmit}
-                              product={this.state}
-                              handleChange={this.handleChange}
-                            />
-                          </Modal>
-                          <p
-                            onClick={() => this.handleDelete(deleteUserProduct)}
-                            className="btn red"
-                          >
-                            {attrs.loading ? "deleting..." : "X"}
-                          </p>
-                        </div>
-                      );
-                    }}
-                  </Mutation>
-                </li>
+                          });
+                        }}
+                      >
+                        {(deleteUserProduct, attrs = {}) => {
+                          return (
+                            <div className="card-action">
+                              <div className="row">
+                                <div className="col s12">
+                                  <div className="col s6">
+                                    {" "}
+                                    <Modal
+                                      header="Update Product"
+                                      trigger={
+                                        <button className="btn-floating btn-large waves-effect waves-light modal-trigger">
+                                          <div
+                                            className="center-align"
+                                            onClick={e =>
+                                              this.loadProduct(e, product)
+                                            }
+                                            style={{
+                                              fontSize: "20px",
+                                              marginLeft: "3px",
+                                              marginTop: "3px"
+                                            }}
+                                          >
+                                            {" "}
+                                            <FaEdit />
+                                          </div>
+                                        </button>
+                                      }
+                                    >
+                                      <EditProductModal
+                                        handleSubmit={this.handleSubmit}
+                                        product={this.state}
+                                        handleChange={this.handleChange}
+                                      />
+                                    </Modal>
+                                  </div>
+                                  <div className="col s6">
+                                    <button
+                                      onClick={() =>
+                                        this.handleDelete(deleteUserProduct)
+                                      }
+                                      className="btn-floating btn-large waves-effect waves-light red"
+                                    >
+                                      {attrs.loading ? (
+                                        <i className="large material-icons">
+                                          delete_sweep
+                                        </i>
+                                      ) : (
+                                        <i className="large material-icons">
+                                          delete_forever
+                                        </i>
+                                      )}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }}
+                      </Mutation>
+                    </div>
+                  </div>
+                </div>
               ))}{" "}
-            </ul>
+            </div>
           );
         }}
       </Query>

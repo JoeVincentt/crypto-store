@@ -109,17 +109,7 @@ exports.resolvers = {
         product: productOrdered,
         user: userOrdered,
         quantity
-      })
-
-        .populate({
-          path: "product",
-          model: Product
-        })
-        .populate({
-          path: "user",
-          model: User
-        })
-        .save();
+      }).save();
       const userCartUpdate = await User.findOneAndUpdate(
         { _id: userId },
         { $push: { cart: newOrder } }
@@ -158,16 +148,7 @@ exports.resolvers = {
         category,
         username,
         price
-      })
-        .populate({
-          path: "product",
-          model: "Product"
-        })
-        .populate({
-          path: "user",
-          model: "User"
-        })
-        .save();
+      }).save();
       return newProduct;
     },
 
@@ -195,7 +176,13 @@ exports.resolvers = {
       return product;
     },
 
-    deleteUserProduct: async (root, { _id }, { Product }) => {
+    deleteUserProduct: async (root, { _id }, { Product, User, Order }) => {
+      const order = await Order.findOneAndRemove({ product: _id });
+      const user = await User.findOneAndUpdate(
+        { cart: order._id },
+        { $pull: { cart: order._id } }
+      );
+
       const product = await Product.findOneAndRemove({ _id });
       return product;
     },

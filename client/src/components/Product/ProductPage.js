@@ -5,6 +5,17 @@ import { GET_PRODUCT } from "../../queries/index";
 import LikeProduct from "./LikeProduct";
 import Spinner from "../Spinner";
 import OrderButton from "../Order/OrderButton";
+import posed from "react-pose";
+import { Divider } from "react-materialize";
+
+const ProductItem = posed.li({
+  shown: {
+    opacity: 1
+  },
+  hidden: {
+    opacity: 0
+  }
+});
 
 const ProductPage = ({ match, session }) => {
   const prodId = match.params._id;
@@ -16,49 +27,54 @@ const ProductPage = ({ match, session }) => {
         if (error) return <div>Error</div>;
         console.log(data);
         return (
-          <div className="container center-align">
-            <div
-              style={{
-                background: `url(${
-                  data.getProduct.imageUrl
-                }) center center / cover no-repeat`
-              }}
-              className="product-image"
-            />
-            <div className="product">
-              <div className="product-header">
-                <div className="product-name">
-                  <h2 className="product-name">
-                    <strong>{data.getProduct.name}</strong>
-                  </h2>{" "}
+          <ProductItem>
+            <div className="row">
+              <div className="col m8 offset-m2">
+                <div className="card z-depth-5">
+                  <div className="card-image waves-effect waves-block waves-light">
+                    <img
+                      className="activator"
+                      src={`${data.getProduct.imageUrl}`}
+                      alt="productpic"
+                    />
+                  </div>
+                  <div className="container center-align">
+                    <div className="card-content">
+                      <h4>{data.getProduct.name}</h4>
+                      <p>
+                        {data.getProduct.likes} <LikeProduct _id={prodId} />
+                      </p>
+                      <br />
+                      <Divider />
+                      <br />
+                      <p>
+                        {" "}
+                        Category: <strong>
+                          {data.getProduct.category}
+                        </strong>{" "}
+                      </p>
+                      <h5>Description: </h5>
+                      <p>{data.getProduct.description}</p>
+                      <br />
+                      <p>
+                        Created by: <strong>{data.getProduct.username}</strong>
+                      </p>
+
+                      <br />
+                      <Divider />
+                      <br />
+                      <h5>
+                        Price: <strong>$ {data.getProduct.price}</strong>{" "}
+                      </h5>
+                      <br />
+                      <Divider />
+                      <OrderButton prodId={prodId} userId={userId} />
+                    </div>
+                  </div>
                 </div>
-                <h5>
-                  <strong>{data.getProduct.category}</strong>
-                </h5>
-                <p>
-                  Created by <strong>{data.getProduct.username}</strong>
-                </p>
-                <p>
-                  {data.getProduct.likes}{" "}
-                  <span role="img" aria-label="heart">
-                    ❤️
-                  </span>
-                </p>
               </div>
-              <div className="transparent product-description">
-                {data.getProduct.description}
-              </div>
-              <h3 className="product-instructions__title">Instructions</h3>
-              <div
-                className="product-instructions"
-                dangerouslySetInnerHTML={{
-                  __html: data.getProduct.instructions
-                }}
-              />{" "}
-              <LikeProduct _id={prodId} />
             </div>
-            <OrderButton prodId={prodId} userId={userId} />
-          </div>
+          </ProductItem>
         );
       }}
     </Query>

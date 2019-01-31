@@ -162,9 +162,9 @@ class AddProduct extends Component {
                         defaultValue="1"
                         onChange={this.handleChange}
                       >
-                        <option value="1">Home</option>
-                        <option value="2">Groceries</option>
-                        <option value="3">Pets</option>
+                        <option value="Home">Home</option>
+                        <option value="Groceris">Groceries</option>
+                        <option value="Pets">Pets</option>
                       </Input>
                     </div>
                   </Row>

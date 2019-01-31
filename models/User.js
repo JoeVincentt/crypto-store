@@ -26,7 +26,8 @@ const UserSchema = new Schema({
   },
   cart: {
     type: [Schema.Types.ObjectId],
-    ref: "Order"
+    ref: "Order",
+    autopopulate: true
   }
 });
 
@@ -44,5 +45,7 @@ UserSchema.pre("save", function(next) {
     });
   });
 });
+
+UserSchema.plugin(require("mongoose-autopopulate"));
 
 module.exports = mongoose.model("User", UserSchema);

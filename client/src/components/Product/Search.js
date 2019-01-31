@@ -39,11 +39,11 @@ class Search extends Component {
               </div>
             </div>
 
-            <ul>
+            <div className="row">
               {searchResults.map(product => (
                 <SearchProduct key={product._id} {...product} />
               ))}
-            </ul>
+            </div>
           </div>
         )}
       </ApolloConsumer>

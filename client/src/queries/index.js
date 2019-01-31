@@ -10,6 +10,9 @@ export const GET_ALL_PRODUCTS = gql`
       imageUrl
       name
       category
+      price
+      description
+      likes
     }
   }
 `;
@@ -28,6 +31,8 @@ export const SEARCH_PRODUCT = gql`
     searchProduct(searchTerm: $searchTerm) {
       _id
       name
+      imageUrl
+      price
       likes
     }
   }

@@ -40,11 +40,12 @@ class OrderButton extends Component {
           return (
             <div>
               {" "}
-              <div className="row">
-                <div className="col s2 offset-s5">
+              <div className="row center-align">
+                <div className="col s4 offset-s4">
+                  <label htmlFor="quantity">Quantity</label>
                   <Input
                     type="select"
-                    label="Quantity"
+                    name="quantity"
                     defaultValue="1"
                     onChange={this.handleChange}
                   >
@@ -52,16 +53,14 @@ class OrderButton extends Component {
                     <option value="2">2</option>
                     <option value="3">3</option>
                   </Input>
+                  <button
+                    className="btn"
+                    name="order"
+                    onClick={e => this.handleOrder(e, createOrder)}
+                  >
+                    Order
+                  </button>{" "}
                 </div>
-              </div>
-              <div className="row">
-                <button
-                  className="btn"
-                  name="order"
-                  onClick={e => this.handleOrder(e, createOrder)}
-                >
-                  Order Now
-                </button>{" "}
               </div>
               {error && <Error error={error} />}
             </div>

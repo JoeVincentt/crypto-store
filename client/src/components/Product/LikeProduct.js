@@ -91,12 +91,20 @@ class LikeProduct extends Component {
           >
             {likeProduct =>
               username && (
-                <button
-                  className="like-button"
+                <span
                   onClick={() => this.handleClick(likeProduct, unlikeProduct)}
+                  style={{ cursor: "pointer", fontSize: "20px" }}
                 >
-                  {liked ? "Unlike" : "Like"}
-                </button>
+                  {liked ? (
+                    <span role="img" aria-label="heart">
+                      🖤
+                    </span>
+                  ) : (
+                    <span role="img" aria-label="heart">
+                      ❤️
+                    </span>
+                  )}
+                </span>
               )
             }
           </Mutation>
