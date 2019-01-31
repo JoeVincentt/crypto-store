@@ -177,13 +177,10 @@ exports.resolvers = {
     },
 
     deleteUserProduct: async (root, { _id }, { Product, User, Order }) => {
-      const order = await Order.findOneAndRemove({ product: _id });
-      const user = await User.findOneAndUpdate(
-        { cart: order._id },
-        { $pull: { cart: order._id } }
-      );
+      const ordersToDelete = await Order.deleteMany({ product: _id });
 
       const product = await Product.findOneAndRemove({ _id });
+
       return product;
     },
 

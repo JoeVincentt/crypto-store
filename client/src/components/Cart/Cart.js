@@ -1,8 +1,8 @@
 import React from "react";
 import Spinner from "../Spinner";
+
 import { Query } from "react-apollo";
 import {
-  GET_USER,
   GET_PRODUCT,
   DELETE_ORDER,
   GET_CURRENT_USER,
@@ -11,6 +11,17 @@ import {
 import DeleteCartItem from "./DeleteCartItem";
 import UpdateCartItemQuantity from "./UpdateCartItemQuantity";
 import ItemCheckout from "./ItemCheckout";
+import posed from "react-pose";
+import { Divider } from "react-materialize";
+
+const ProductItem = posed.div({
+  shown: {
+    opacity: 1
+  },
+  hidden: {
+    opacity: 0
+  }
+});
 
 const handleDelete = deleteOrder => {
   const confirmDelete = window.confirm(
@@ -35,7 +46,7 @@ const Cart = ({ session }) => {
   // const userId = cart[0].user[0]._id;
   // const quantity = cart[0].quantity;
   return (
-    <div className="cantainer center-align">
+    <div className="container center-align">
       <h1>Cart Items</h1>
 
       {cart.map((item, index) => (
@@ -47,44 +58,61 @@ const Cart = ({ session }) => {
           {({ data, loading, error }) => {
             if (loading) return <Spinner />;
             if (error) return <div>Error</div>;
-            // console.log(data);
+
             const name = data.getProduct.name;
             const price = data.getProduct.price;
+            const username = data.getProduct.username;
+            const category = data.getProduct.category;
+            const imageUrl = data.getProduct.imageUrl;
             const quantity = item.quantity;
             return (
-              <Query query={GET_USER} variables={{ userId: item.user[0]._id }}>
-                {({ data, loading, error }) => {
-                  if (loading) return <Spinner />;
-                  if (error) return <div>Error</div>;
-                  // console.log(data);
-                  const username = data.getUser.username;
-                  return (
-                    <div>
-                      <ul>
-                        <li>
-                          Product name: {name} || qty: {quantity} || seller:{" "}
-                          {username} || Price: {price} || Total Price:{" "}
-                          {(price * quantity).toFixed(2)}
-                        </li>
-                      </ul>
-                      <ItemCheckout />
-                      <UpdateCartItemQuantity
-                        quantity={item.quantity}
-                        orderId={item._id}
-                        UPDATE_ORDER_QUANTITY={UPDATE_ORDER_QUANTITY}
-                        GET_CURRENT_USER={GET_CURRENT_USER}
-                      />
-                      <DeleteCartItem
-                        DELETE_ORDER={DELETE_ORDER}
-                        GET_CURRENT_USER={GET_CURRENT_USER}
-                        handleDelete={handleDelete}
-                        userId={item.user[0]._id}
-                        orderId={item._id}
-                      />
+              <ProductItem>
+                <div className="row">
+                  <div className="col">
+                    <div className="card horizontal z-depth-5">
+                      <div className="card-image">
+                        <img src={`${imageUrl}`} alt="productpic" />
+                      </div>
+                      <div className="container center-align">
+                        <div className="card-content">
+                          <h4>{name}</h4>
+                          <Divider />
+                          <p>
+                            {" "}
+                            Category: <strong>{category}</strong>{" "}
+                          </p>
+                          <p>
+                            Created by: <strong>{username}</strong>
+                          </p>
+                          <Divider />
+                          <p>
+                            Price per Unit: <strong>$ {price}</strong>{" "}
+                          </p>
+                          <h5>
+                            Total Price:{" "}
+                            <strong>$ {(price * quantity).toFixed(2)}</strong>{" "}
+                          </h5>
+                          <Divider />
+                          <UpdateCartItemQuantity
+                            quantity={item.quantity}
+                            orderId={item._id}
+                            UPDATE_ORDER_QUANTITY={UPDATE_ORDER_QUANTITY}
+                            GET_CURRENT_USER={GET_CURRENT_USER}
+                          />
+                          <DeleteCartItem
+                            DELETE_ORDER={DELETE_ORDER}
+                            GET_CURRENT_USER={GET_CURRENT_USER}
+                            handleDelete={handleDelete}
+                            userId={item.user[0]._id}
+                            orderId={item._id}
+                          />{" "}
+                          <ItemCheckout />
+                        </div>
+                      </div>
                     </div>
-                  );
-                }}
-              </Query>
+                  </div>
+                </div>
+              </ProductItem>
             );
           }}
         </Query>

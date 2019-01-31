@@ -67,7 +67,6 @@ class UserProducts extends Component {
           // console.log(data);
           return (
             <div className="row">
-              <h3>Your Products</h3>{" "}
               {!data.getUserProducts.length && (
                 <p>
                   <strong>You have no products yet. Add some!</strong>

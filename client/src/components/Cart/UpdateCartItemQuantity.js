@@ -37,10 +37,11 @@ class UpdateCartItemQuantity extends Component {
         {(updateOrderQuantity, attrs = {}) => {
           return (
             <div className="row">
-              <div className="col s2 offset-s5">
+              <div className="col s4 offset-s4">
+                <label htmlFor="quantity">Quantity</label>
                 <Input
                   type="select"
-                  label="Quantity"
+                  name="quantity"
                   value={itemQuantity.toString()}
                   onChange={e =>
                     this.handleUpdateQuantity(e, updateOrderQuantity)

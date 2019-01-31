@@ -12,9 +12,9 @@ import React, { Component } from "react";
 class ItemCheckout extends Component {
   render() {
     return (
-      <div className="container center-align">
-        <h1>Checkout</h1>
-      </div>
+      <button className="btn-floating halfway-fab btn-large right waves-effect waves-light blue">
+        <i className="large material-icons">check</i>
+      </button>
     );
   }
 }

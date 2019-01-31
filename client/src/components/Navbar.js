@@ -3,7 +3,17 @@ import { Link } from "react-router-dom";
 import { Navbar, Button } from "react-materialize";
 import { withRouter } from "react-router-dom";
 import { ApolloConsumer } from "react-apollo";
-import { FaShoppingCart } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaUser,
+  FaHome,
+  FaSearch,
+  FaPlusSquare,
+  FaSignInAlt,
+  FaSignOutAlt,
+  FaUserPlus
+} from "react-icons/fa";
+import { IconContext } from "react-icons";
 
 class MainNavbar extends Component {
   state = {
@@ -25,27 +35,35 @@ class MainNavbar extends Component {
     const { session, history } = this.props;
     const { activeNav } = this.state;
     return (
-      <Navbar
-        brand="Crypto Store"
-        trigger={<Button>Nav Close</Button>}
-        options={{ closeOnClick: true }}
-        right
+      <IconContext.Provider
+        value={{
+          size: "20px",
+
+          className: "global-class-name"
+        }}
       >
-        {session && session.getCurrentUser ? (
-          <NavbarAuth
-            session={session}
-            changeNavActiveLink={this.changeNavActiveLink}
-            activeNav={activeNav}
-            handleSignout={this.handleSignout}
-            history={history}
-          />
-        ) : (
-          <NavbarUnAuth
-            changeNavActiveLink={this.changeNavActiveLink}
-            activeNav={activeNav}
-          />
-        )}
-      </Navbar>
+        <Navbar
+          brand="Crypto Store"
+          trigger={<Button>Nav Close</Button>}
+          options={{ closeOnClick: true }}
+          right
+        >
+          {session && session.getCurrentUser ? (
+            <NavbarAuth
+              session={session}
+              changeNavActiveLink={this.changeNavActiveLink}
+              activeNav={activeNav}
+              handleSignout={this.handleSignout}
+              history={history}
+            />
+          ) : (
+            <NavbarUnAuth
+              changeNavActiveLink={this.changeNavActiveLink}
+              activeNav={activeNav}
+            />
+          )}
+        </Navbar>
+      </IconContext.Provider>
     );
   }
 }
@@ -62,19 +80,25 @@ const NavbarAuth = ({
       onClick={() => changeNavActiveLink("home")}
       className={activeNav === "home" ? "active" : ""}
     >
-      <Link to="/">Home</Link>
+      <Link to="/">
+        <FaHome style={{ marginBottom: "-5px" }} />
+      </Link>
     </li>
     <li
       onClick={() => changeNavActiveLink("search")}
       className={activeNav === "search" ? "active" : ""}
     >
-      <Link to="/search">Search</Link>
+      <Link to="/search">
+        <FaSearch style={{ marginBottom: "-5px" }} />
+      </Link>
     </li>
     <li
       onClick={() => changeNavActiveLink("addproduct")}
       className={activeNav === "addproduct" ? "active" : ""}
     >
-      <Link to="/product/add">Add Product</Link>
+      <Link to="/product/add">
+        <FaPlusSquare style={{ marginBottom: "-5px" }} />
+      </Link>
     </li>
     <li
       onClick={() => changeNavActiveLink("cart")}
@@ -82,9 +106,8 @@ const NavbarAuth = ({
     >
       <Link to="/profile/cart">
         <span>
-          Cart{" "}
-          <FaShoppingCart style={{ fontSize: "20px", marginBottom: "-5px" }} />{" "}
-          ({session.getCurrentUser.cart.length})
+          <FaShoppingCart style={{ marginBottom: "-5px" }} /> (
+          {session.getCurrentUser.cart.length})
         </span>
       </Link>
     </li>
@@ -92,14 +115,23 @@ const NavbarAuth = ({
       onClick={() => changeNavActiveLink("myprofile")}
       className={activeNav === "myprofile" ? "active" : ""}
     >
-      <Link to="/profile">{session.getCurrentUser.username}</Link>
+      <Link to="/profile">
+        <FaUser
+          style={{
+            marginBottom: "-5px",
+            marginRight: "5px",
+            marginLeft: "-3px"
+          }}
+        />
+        ({session.getCurrentUser.username})
+      </Link>
     </li>
     <li>
       <ApolloConsumer>
         {client => {
           return (
             <Link to="/" onClick={() => handleSignout(client, history)}>
-              Sign out
+              <FaSignOutAlt style={{ marginBottom: "-5px" }} />
             </Link>
           );
         }}
@@ -114,25 +146,33 @@ const NavbarUnAuth = ({ activeNav, changeNavActiveLink }) => (
       onClick={() => changeNavActiveLink("home")}
       className={activeNav === "home" ? "active" : ""}
     >
-      <Link to="/">Home</Link>
+      <Link to="/">
+        <FaHome style={{ marginBottom: "-5px" }} />
+      </Link>
     </li>
     <li
       onClick={() => changeNavActiveLink("search")}
       className={activeNav === "search" ? "active" : ""}
     >
-      <Link to="/search">Search</Link>
+      <Link to="/search">
+        <FaSearch style={{ marginBottom: "-5px" }} />
+      </Link>
     </li>
     <li
       onClick={() => changeNavActiveLink("signin")}
       className={activeNav === "signin" ? "active" : ""}
     >
-      <Link to="/signin">Sign In</Link>
+      <Link to="/signin">
+        <FaSignInAlt style={{ marginBottom: "-5px" }} />
+      </Link>
     </li>
     <li
       onClick={() => changeNavActiveLink("signup")}
       className={activeNav === "signup" ? "active" : ""}
     >
-      <Link to="/signup">Sign Up</Link>
+      <Link to="/signup">
+        <FaUserPlus style={{ marginBottom: "-5px" }} />
+      </Link>
     </li>
   </ul>
 );
