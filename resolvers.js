@@ -177,8 +177,22 @@ exports.resolvers = {
     },
 
     deleteUserProduct: async (root, { _id }, { Product, User, Order }) => {
+      //Clearing Ref in the cart[]
+      const clearRef = async _id => {
+        const order = await Order.find({ product: _id });
+        if (order) {
+          order.map(async o => {
+            await User.updateMany({ cart: o._id }, { $pull: { cart: o._id } });
+          });
+        }
+        return;
+      };
+      clearRef(_id);
+
+      //deleting all orders what has user product
       const ordersToDelete = await Order.deleteMany({ product: _id });
 
+      //deleting product
       const product = await Product.findOneAndRemove({ _id });
 
       return product;

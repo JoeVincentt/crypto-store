@@ -82,6 +82,9 @@ const NavbarAuth = ({
     >
       <Link to="/">
         <FaHome style={{ marginBottom: "-5px" }} />
+        <span className="hide-on-large-only" style={{ marginLeft: "5px" }}>
+          Home
+        </span>
       </Link>
     </li>
     <li
@@ -90,6 +93,9 @@ const NavbarAuth = ({
     >
       <Link to="/search">
         <FaSearch style={{ marginBottom: "-5px" }} />
+        <span className="hide-on-large-only" style={{ marginLeft: "5px" }}>
+          Search
+        </span>
       </Link>
     </li>
     <li
@@ -98,6 +104,9 @@ const NavbarAuth = ({
     >
       <Link to="/product/add">
         <FaPlusSquare style={{ marginBottom: "-5px" }} />
+        <span className="hide-on-large-only" style={{ marginLeft: "5px" }}>
+          Add Product
+        </span>
       </Link>
     </li>
     <li
@@ -132,6 +141,12 @@ const NavbarAuth = ({
           return (
             <Link to="/" onClick={() => handleSignout(client, history)}>
               <FaSignOutAlt style={{ marginBottom: "-5px" }} />
+              <span
+                className="hide-on-large-only"
+                style={{ marginLeft: "5px" }}
+              >
+                Log Out
+              </span>
             </Link>
           );
         }}
@@ -148,6 +163,9 @@ const NavbarUnAuth = ({ activeNav, changeNavActiveLink }) => (
     >
       <Link to="/">
         <FaHome style={{ marginBottom: "-5px" }} />
+        <span className="hide-on-large-only" style={{ marginLeft: "5px" }}>
+          Home
+        </span>
       </Link>
     </li>
     <li
@@ -156,6 +174,9 @@ const NavbarUnAuth = ({ activeNav, changeNavActiveLink }) => (
     >
       <Link to="/search">
         <FaSearch style={{ marginBottom: "-5px" }} />
+        <span className="hide-on-large-only" style={{ marginLeft: "5px" }}>
+          Search
+        </span>
       </Link>
     </li>
     <li
@@ -164,6 +185,9 @@ const NavbarUnAuth = ({ activeNav, changeNavActiveLink }) => (
     >
       <Link to="/signin">
         <FaSignInAlt style={{ marginBottom: "-5px" }} />
+        <span className="hide-on-large-only" style={{ marginLeft: "5px" }}>
+          Sign In
+        </span>
       </Link>
     </li>
     <li
@@ -172,6 +196,9 @@ const NavbarUnAuth = ({ activeNav, changeNavActiveLink }) => (
     >
       <Link to="/signup">
         <FaUserPlus style={{ marginBottom: "-5px" }} />
+        <span className="hide-on-large-only" style={{ marginLeft: "5px" }}>
+          Sign Up
+        </span>
       </Link>
     </li>
   </ul>
