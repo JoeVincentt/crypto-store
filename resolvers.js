@@ -162,10 +162,10 @@ exports.resolvers = {
           const oldTotal = user.cartTotal;
 
           let totalPrice;
-          if (quantity > oldQuantity) {
-            totalPrice = oldTotal + product.price * (quantity - oldQuantity);
+          if (quantity <= oldQuantity) {
+            totalPrice = product.price * quantity;
           } else {
-            totalPrice = oldTotal - product.price * (quantity + oldQuantity);
+            totalPrice = oldTotal + product.price * (quantity - oldQuantity);
           }
 
           const userCartUpdate = await User.findOneAndUpdate(
@@ -264,7 +264,7 @@ exports.resolvers = {
       const ordersToDelete = await Order.deleteMany({ product: _id });
 
       //deleting product
-      // const product = await Product.findOneAndRemove({ _id });
+      const product = await Product.findOneAndRemove({ _id });
 
       return product;
     },
