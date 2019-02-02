@@ -234,15 +234,26 @@ exports.resolvers = {
     },
 
     deleteUserProduct: async (root, { _id }, { Product, User, Order }) => {
-      //Clearing Ref in the cart[]
+      //Clearing Ref in the cart and Updating totalCart[]
       const clearRef = async _id => {
         const orders = await Order.find({ product: _id });
         if (orders) {
           orders.map(async order => {
-            await User.updateMany(
-              { cart: order._id },
-              { $pull: { cart: order._id } }
-            );
+            try {
+              const price = order.product[0].price;
+              const quantity = order.quantity;
+
+              //Getting new Cart Total
+              const oldTotal = order.user[0].cartTotal;
+              const totalPrice = oldTotal - price * quantity;
+
+              await User.updateMany(
+                { cart: order._id },
+                { $pull: { cart: order._id }, $set: { cartTotal: totalPrice } }
+              );
+            } catch (error) {
+              console.log(error);
+            }
           });
         }
         return;
@@ -253,7 +264,7 @@ exports.resolvers = {
       const ordersToDelete = await Order.deleteMany({ product: _id });
 
       //deleting product
-      const product = await Product.findOneAndRemove({ _id });
+      // const product = await Product.findOneAndRemove({ _id });
 
       return product;
     },
