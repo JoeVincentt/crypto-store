@@ -110,30 +110,82 @@ exports.resolvers = {
         user: userOrdered,
         quantity
       }).save();
+
+      //Getting new Cart Total
+      const oldTotal = userOrdered.cartTotal;
+      const totalPrice = oldTotal + productOrdered.price * quantity;
+
       const userCartUpdate = await User.findOneAndUpdate(
         { _id: userId },
-        { $push: { cart: newOrder } }
+        { $push: { cart: newOrder }, $set: { cartTotal: totalPrice } }
       );
 
       return newOrder;
     },
 
-    deleteOrder: async (root, { userId, orderId }, { User, Order }) => {
+    deleteOrder: async (
+      root,
+      { userId, orderId },
+      { User, Order, Product }
+    ) => {
       const order = await Order.findOneAndRemove({ _id: orderId });
+
+      const quantity = order.quantity;
+      const prodId = order.product[0];
+      const productDeleted = await Product.findOne({ _id: prodId });
+      const user = await User.findOne({ _id: userId });
+      //Getting new Cart Total
+      const oldTotal = user.cartTotal;
+      const totalPrice = oldTotal - productDeleted.price * quantity;
 
       const userCartUpdate = await User.findOneAndUpdate(
         { _id: userId },
-        { $pull: { cart: orderId } }
+        { $pull: { cart: orderId }, $set: { cartTotal: totalPrice } }
       );
       return order;
     },
-    updateOrderQuantity: async (root, { orderId, quantity }, { Order }) => {
-      const order = await Order.findOneAndUpdate(
+    updateOrderQuantity: async (
+      root,
+      { orderId, quantity },
+      { Order, Product, User }
+    ) => {
+      //Updating users cart total when changing quantity of product
+      const updateUserCart = async (_id, quantity) => {
+        try {
+          const order = await Order.findOne({ _id: orderId });
+          const oldQuantity = order.quantity;
+          const prodId = order.product[0]._id;
+          const userId = order.user[0];
+          const product = await Product.findOne({ _id: prodId });
+          const user = await User.findOne({ _id: userId });
+          //Getting new Cart Total
+          const oldTotal = user.cartTotal;
+
+          let totalPrice;
+          if (quantity > oldQuantity) {
+            totalPrice = oldTotal + product.price * (quantity - oldQuantity);
+          } else {
+            totalPrice = oldTotal - product.price * (quantity + oldQuantity);
+          }
+
+          const userCartUpdate = await User.findOneAndUpdate(
+            { _id: userId },
+            { $set: { cartTotal: totalPrice } }
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      updateUserCart(orderId, quantity);
+
+      //Update Order quantity information
+      const orderUpdate = await Order.findOneAndUpdate(
         { _id: orderId },
         { $set: { quantity } },
         { new: true }
       );
-      return order;
+
+      return orderUpdate;
     },
 
     addProduct: async (
@@ -153,6 +205,11 @@ exports.resolvers = {
     },
 
     likeProduct: async (root, { _id, username }, { Product, User }) => {
+      const prod = await Product.findOne({ _id });
+      if (prod.likes < 0) {
+        await Product.findOneAndUpdate({ _id }, { $set: { likes: 0 } });
+      }
+
       const product = await Product.findOneAndUpdate(
         { _id },
         { $inc: { likes: 1 } }
@@ -179,10 +236,13 @@ exports.resolvers = {
     deleteUserProduct: async (root, { _id }, { Product, User, Order }) => {
       //Clearing Ref in the cart[]
       const clearRef = async _id => {
-        const order = await Order.find({ product: _id });
-        if (order) {
-          order.map(async o => {
-            await User.updateMany({ cart: o._id }, { $pull: { cart: o._id } });
+        const orders = await Order.find({ product: _id });
+        if (orders) {
+          orders.map(async order => {
+            await User.updateMany(
+              { cart: order._id },
+              { $pull: { cart: order._id } }
+            );
           });
         }
         return;

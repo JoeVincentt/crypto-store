@@ -28,6 +28,16 @@ const UserSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: "Order",
     autopopulate: true
+  },
+  cartTotal: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  wallet: {
+    type: Number,
+    required: true,
+    default: 0
   }
 });
 

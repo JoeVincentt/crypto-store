@@ -18,6 +18,8 @@ type User {
   joinDate: String
   favorites: [Product]
   cart: [Order]
+  cartTotal: Float!
+  wallet: Float!
 }
 
 type Order {
