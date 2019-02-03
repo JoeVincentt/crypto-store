@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { Query } from "react-apollo";
 import { GET_PRODUCT } from "../../queries/index";
 import LikeProduct from "./LikeProduct";
@@ -10,7 +10,7 @@ import { Divider } from "react-materialize";
 
 const ProductPage = ({ match, session }) => {
   const prodId = match.params._id;
-  const userId = session.getCurrentUser._id;
+  // const userId = session.getCurrentUser._id;
   return (
     <Query query={GET_PRODUCT} variables={{ prodId }}>
       {({ data, loading, error }) => {
@@ -61,7 +61,16 @@ const ProductPage = ({ match, session }) => {
                     </h5>
                     <br />
                     <Divider />
-                    <OrderButton prodId={prodId} userId={userId} />
+                    <br />
+                    {session.getCurrentUser !== null ? (
+                      <OrderButton session={session} prodId={prodId} />
+                    ) : (
+                      <div className="btn red">
+                        <Link to="/signin" className="white-text">
+                          Signin to Order
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

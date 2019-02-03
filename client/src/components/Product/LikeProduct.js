@@ -89,10 +89,14 @@ class LikeProduct extends Component {
             variables={{ _id, username }}
             update={this.updateLike}
           >
-            {likeProduct =>
-              username && (
+            {(likeProduct, attrs = {}) =>
+              username ? (
                 <span
-                  onClick={() => this.handleClick(likeProduct, unlikeProduct)}
+                  onClick={
+                    attrs.loading
+                      ? () => console.log()
+                      : () => this.handleClick(likeProduct, unlikeProduct)
+                  }
                   style={{ cursor: "pointer", fontSize: "20px" }}
                 >
                   {liked ? (
@@ -104,6 +108,10 @@ class LikeProduct extends Component {
                       🖤
                     </span>
                   )}
+                </span>
+              ) : (
+                <span role="img" aria-label="heart">
+                  ❤️
                 </span>
               )
             }

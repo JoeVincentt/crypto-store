@@ -102,25 +102,45 @@ exports.resolvers = {
       { prodId, userId, quantity },
       { Product, Order, User }
     ) => {
-      const userOrdered = await User.findOne({ _id: userId });
+      const existingOrder = await Order.findOne({
+        product: { _id: prodId },
+        user: { _id: userId }
+      });
 
-      const productOrdered = await Product.findOne({ _id: prodId });
-      const newOrder = await new Order({
-        product: productOrdered,
-        user: userOrdered,
-        quantity
-      }).save();
+      if (!existingOrder) {
+        const userOrdered = await User.findOne({ _id: userId });
+        const productOrdered = await Product.findOne({ _id: prodId });
+        const newOrder = await new Order({
+          product: productOrdered,
+          user: userOrdered,
+          quantity
+        }).save();
+        //Getting new Cart Total
+        const oldTotal = userOrdered.cartTotal;
+        const totalPrice = await (oldTotal + productOrdered.price * quantity);
+        const userCartUpdate = await User.findOneAndUpdate(
+          { _id: userId },
+          { $push: { cart: newOrder }, $set: { cartTotal: totalPrice } }
+        );
+        return newOrder;
+      }
 
-      //Getting new Cart Total
-      const oldTotal = userOrdered.cartTotal;
-      const totalPrice = oldTotal + productOrdered.price * quantity;
-
-      const userCartUpdate = await User.findOneAndUpdate(
-        { _id: userId },
-        { $push: { cart: newOrder }, $set: { cartTotal: totalPrice } }
+      //Updating existing order
+      const existingOrderId = existingOrder._id;
+      const existingOrderQuantity = existingOrder.quantity;
+      const updatedOrder = await Order.updateOne(
+        { _id: existingOrderId },
+        { $set: { quantity: existingOrderQuantity + quantity } }
       );
-
-      return newOrder;
+      //updating User cartTotal
+      const userOrdered = await User.findOne({ _id: userId });
+      const productOrdered = await Product.findOne({ _id: prodId });
+      const oldTotal = userOrdered.cartTotal;
+      const totalPrice = await (oldTotal + productOrdered.price * quantity);
+      const userCartUpdate = await User.updateOne(
+        { _id: userId },
+        { $set: { cartTotal: totalPrice } }
+      );
     },
 
     deleteOrder: async (
@@ -136,7 +156,7 @@ exports.resolvers = {
       const user = await User.findOne({ _id: userId });
       //Getting new Cart Total
       const oldTotal = user.cartTotal;
-      const totalPrice = oldTotal - productDeleted.price * quantity;
+      const totalPrice = await (oldTotal - productDeleted.price * quantity);
 
       const userCartUpdate = await User.findOneAndUpdate(
         { _id: userId },
@@ -163,9 +183,10 @@ exports.resolvers = {
 
           let totalPrice;
           if (quantity <= oldQuantity) {
-            totalPrice = product.price * quantity;
+            totalPrice = await (product.price * quantity);
           } else {
-            totalPrice = oldTotal + product.price * (quantity - oldQuantity);
+            totalPrice = await (oldTotal +
+              product.price * (quantity - oldQuantity));
           }
 
           const userCartUpdate = await User.findOneAndUpdate(
@@ -245,7 +266,7 @@ exports.resolvers = {
 
               //Getting new Cart Total
               const oldTotal = order.user[0].cartTotal;
-              const totalPrice = oldTotal - price * quantity;
+              const totalPrice = await (oldTotal - price * quantity);
 
               await User.updateMany(
                 { cart: order._id },

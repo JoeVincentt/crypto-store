@@ -24,8 +24,10 @@ class OrderButton extends Component {
   };
 
   render() {
-    const { userId, prodId } = this.props;
+    const userId = this.props.session.getCurrentUser._id;
+    const { prodId } = this.props;
     const { quantity } = this.state;
+
     return (
       <Mutation
         mutation={CREATE_ORDER}
@@ -52,14 +54,29 @@ class OrderButton extends Component {
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
                   </Input>
-                  <button
-                    className="btn"
-                    name="order"
-                    onClick={e => this.handleOrder(e, createOrder)}
-                  >
-                    Order
-                  </button>{" "}
+                  {loading ? (
+                    <button
+                      className="btn disabled"
+                      name="order"
+                      onClick={e => this.handleOrder(e, createOrder)}
+                    >
+                      Ordering
+                    </button>
+                  ) : (
+                    <button
+                      className="btn"
+                      name="order"
+                      onClick={e => this.handleOrder(e, createOrder)}
+                    >
+                      Order
+                    </button>
+                  )}
                 </div>
               </div>
               {error && <Error error={error} />}
