@@ -27,6 +27,7 @@ const handleDelete = deleteOrder => {
 
 const Cart = ({ session }) => {
   const cart = session.getCurrentUser.cart;
+  const cartTotal = session.getCurrentUser.cartTotal;
 
   console.log(cart);
   // console.log(session.getCurrentUser);
@@ -39,6 +40,7 @@ const Cart = ({ session }) => {
   return (
     <div className="container center-align">
       <h1>Cart Items</h1>
+      <h5>Total Cart Price: {cartTotal}</h5>
 
       {cart.map((item, index) => (
         <Query
