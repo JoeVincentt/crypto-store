@@ -44,33 +44,6 @@ class Signin extends Component {
         <Mutation mutation={SIGNIN_USER} variables={{ email, password }}>
           {(signinUser, { data, loading, error }) => {
             return (
-              // <form
-              //   className="form"
-              //   onSubmit={event => this.handleSubmit(event, signinUser)}
-              // >
-              //   <input
-              //     type="text"
-              //     name="email"
-              //     placeholder="Email"
-              //     onChange={this.handleChange}
-              //     value={email}
-              //   />
-              //   <input
-              //     type="password"
-              //     name="password"
-              //     placeholder="Password"
-              //     onChange={this.handleChange}
-              //     value={password}
-              //   />
-              //   <button
-              //     type="submit"
-              //     className="button-primary"
-              //     disabled={loading || this.validateForm()}
-              //   >
-              //     Submit
-              //   </button>
-              //   {error && <Error error={error} />}
-              // </form>
               <div className="row">
                 <form
                   className="col s12"
