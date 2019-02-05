@@ -11,7 +11,8 @@ import {
   FaPlusSquare,
   FaSignInAlt,
   FaSignOutAlt,
-  FaUserPlus
+  FaUserPlus,
+  FaWallet
 } from "react-icons/fa";
 import { IconContext } from "react-icons";
 
@@ -117,6 +118,17 @@ const NavbarAuth = ({
         <span>
           <FaShoppingCart style={{ marginBottom: "-5px" }} /> (
           {session.getCurrentUser.cart.length})
+        </span>
+      </Link>
+    </li>
+    <li
+      onClick={() => changeNavActiveLink("wallet")}
+      className={activeNav === "wallet" ? "active" : ""}
+    >
+      <Link to="/profile/wallet">
+        <span>
+          <FaWallet style={{ marginBottom: "-5px" }} /> (
+          {session.getCurrentUser.wallet})
         </span>
       </Link>
     </li>

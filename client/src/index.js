@@ -22,6 +22,7 @@ import AddProduct from "./components/Product/AddProduct";
 import ProductPage from "./components/Product/ProductPage";
 import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
+import Wallet from "./components/Wallet/Wallet";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -66,6 +67,7 @@ class Root extends Component {
               path="/products/:_id"
               render={() => <ProductPage session={session} />}
             />
+
             <Route
               path="/profile"
               exact
@@ -75,6 +77,11 @@ class Root extends Component {
               path="/profile/cart"
               exact
               render={() => <Cart session={session} />}
+            />
+            <Route
+              path="/profile/wallet"
+              exact
+              render={() => <Wallet session={session} />}
             />
             <Redirect to="/" />
           </Switch>

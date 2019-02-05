@@ -118,7 +118,8 @@ exports.resolvers = {
           { _id: userId },
           { $inc: { wallet: charge.amount } }
         );
-        return user;
+        const updatedUser = await User.findOne({ _id: userId });
+        return updatedUser;
       });
     },
 

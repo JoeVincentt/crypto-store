@@ -38,6 +38,17 @@ export const SEARCH_PRODUCT = gql`
   }
 `;
 
+//Wallet Mutation
+export const GET_COINS = gql`
+  mutation($userId: ID!, $amount: Float!) {
+    getCoins(userId: $userId, amount: $amount) {
+      _id
+      username
+      wallet
+    }
+  }
+`;
+
 //Order Mutation
 
 export const CREATE_ORDER = gql`
