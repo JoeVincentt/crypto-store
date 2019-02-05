@@ -49,10 +49,15 @@ type Token {
 }
 
 type Mutation {
+  # User Wallet Mutations
+  getCoins(userId: ID!, amount: Float!): User
+
+  # Order Mutations
   createOrder(prodId: ID!, userId: ID!, quantity: Int!): Order
   deleteOrder(userId: ID!, orderId: ID!): Order
   updateOrderQuantity(orderId: ID!, quantity: Int!): Order
 
+  # Product Mutations
   addProduct(
     name: String!
     imageUrl: String!
@@ -77,6 +82,7 @@ type Mutation {
 
   unlikeProduct(_id: ID!, username: String!): Product
 
+  # User Mutations
   signinUser(email: String!, password: String!): Token
 
   signupUser(

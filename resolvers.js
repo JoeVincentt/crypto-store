@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+var stripe = require("stripe")(process.env.STRIPE_KEY);
 
 const createToken = (user, secret, expiresIn) => {
   const { username, email } = user;
@@ -16,6 +17,7 @@ const createToken = (user, secret, expiresIn) => {
 
 exports.resolvers = {
   Query: {
+    // Order resolvers
     getAllOrders: async (root, args, { Order }) => {
       const allOrders = await Order.find().sort({ timestamps: "desc" });
       return allOrders;
@@ -25,6 +27,7 @@ exports.resolvers = {
       return order;
     },
 
+    // Product resolvers
     getAllProducts: async (root, args, { Product }) => {
       const allProducts = await Product.find().sort({ createdDate: "desc" });
       return allProducts;
@@ -62,6 +65,7 @@ exports.resolvers = {
       return userProducts;
     },
 
+    // User resolvers
     getCurrentUser: async (root, args, { currentUser, User }) => {
       if (!currentUser) {
         return null;
@@ -97,6 +101,28 @@ exports.resolvers = {
     }
   },
   Mutation: {
+    // User Wallet Mutations
+    getCoins: async (root, { userId, amount }, { User }) => {
+      const stripePayment = async () => {
+        const charge = await stripe.charges.create({
+          amount: amount,
+          currency: "usd",
+          source: "tok_visa",
+          receipt_email: "jenny.rosen@example.com"
+        });
+        return charge;
+      };
+
+      return stripePayment().then(async charge => {
+        const user = await User.findOneAndUpdate(
+          { _id: userId },
+          { $inc: { wallet: charge.amount } }
+        );
+        return user;
+      });
+    },
+
+    // Order Mutations
     createOrder: async (
       root,
       { prodId, userId, quantity },
@@ -183,10 +209,9 @@ exports.resolvers = {
 
           let totalPrice;
           if (quantity <= oldQuantity) {
-            totalPrice = await (product.price * quantity);
+            totalPrice = product.price * quantity;
           } else {
-            totalPrice = await (oldTotal +
-              product.price * (quantity - oldQuantity));
+            totalPrice = oldTotal + product.price * (quantity - oldQuantity);
           }
 
           const userCartUpdate = await User.findOneAndUpdate(
@@ -209,6 +234,7 @@ exports.resolvers = {
       return orderUpdate;
     },
 
+    // Product Mutations
     addProduct: async (
       root,
       { name, imageUrl, description, category, username, price },
@@ -266,7 +292,7 @@ exports.resolvers = {
 
               //Getting new Cart Total
               const oldTotal = order.user[0].cartTotal;
-              const totalPrice = await (oldTotal - price * quantity);
+              const totalPrice = oldTotal - price * quantity;
 
               await User.updateMany(
                 { cart: order._id },
@@ -279,7 +305,7 @@ exports.resolvers = {
         }
         return;
       };
-      clearRef(_id);
+      await clearRef(_id);
 
       //deleting all orders what has user product
       const ordersToDelete = await Order.deleteMany({ product: _id });
@@ -303,6 +329,7 @@ exports.resolvers = {
       return updatedProduct;
     },
 
+    //User Mutations
     signinUser: async (root, { email, password }, { User }) => {
       // if (password !== passwordConfirmation) {
       //   throw new Error("Password Confirmation Failed");

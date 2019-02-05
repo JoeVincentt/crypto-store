@@ -25,11 +25,13 @@ class Cart extends Component {
       });
     }
   };
+
   render() {
     return (
-      <Query query={GET_CURRENT_USER} pollInterval={500}>
-        {({ data, loading }) => {
+      <Query query={GET_CURRENT_USER} pollInterval={2000}>
+        {({ data, loading, startPolling, stopPolling, refetch }) => {
           console.log(data);
+
           if (loading) return null;
           return (
             <div className="container center-align">
