@@ -168,11 +168,12 @@ exports.resolvers = {
     ) => {
       const existingOrder = await Order.findOne({
         product: { _id: prodId },
-        user: { _id: userId }
+        user: { _id: userId },
+        status: "unpaid"
       });
 
       ///Orders bug! TO FIX
-      if (!existingOrder || existingOrder.status === "paid") {
+      if (!existingOrder) {
         const userOrdered = await User.findOne({ _id: userId });
         const productOrdered = await Product.findOne({ _id: prodId });
         const newOrder = await new Order({
