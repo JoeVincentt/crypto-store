@@ -27,6 +27,7 @@ type Order {
   product: [Product]
   quantity: Int!
   user: [User]
+  status: String
   createdAt: String
   updatedAt: String
 }
@@ -51,6 +52,9 @@ type Token {
 type Mutation {
   # User Wallet Mutations
   getCoins(userId: ID!, amount: Float!): User
+
+  # Checkout Mutations
+  wholeCartCheckout(userId: ID!): User
 
   # Order Mutations
   createOrder(prodId: ID!, userId: ID!, quantity: Int!): Order

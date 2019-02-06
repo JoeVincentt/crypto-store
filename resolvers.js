@@ -101,6 +101,43 @@ exports.resolvers = {
     }
   },
   Mutation: {
+    // Checkout Mutations
+    wholeCartCheckout: async (root, { userId }, { User, Order }) => {
+      const user = await User.findOne({ _id: userId });
+      const userWallet = user.wallet;
+      const userCartTotal = user.cartTotal;
+      if (user.cart.length > 0) {
+        if (userWallet >= userCartTotal) {
+          //Updating Order status
+          user.cart.map(async ord => {
+            const order = await Order.updateOne(
+              { _id: ord._id },
+              { $set: { status: "paid" } }
+            );
+          });
+
+          //Update User info
+          const userCheckout = await User.updateOne(
+            { _id: userId },
+            {
+              $set: {
+                cart: [],
+                cartTotal: 0,
+                wallet: userWallet - userCartTotal
+              }
+            }
+          );
+
+          console.log("CART EMPTY AFTER CHECKOUT");
+          return await User.findOne({ _id: userId });
+        } else {
+          throw new Error("Not Enough Funds");
+        }
+      } else {
+        throw new Error("Cart is Empty");
+      }
+    },
+
     // User Wallet Mutations
     getCoins: async (root, { userId, amount }, { User }) => {
       const stripePayment = async () => {
@@ -134,7 +171,8 @@ exports.resolvers = {
         user: { _id: userId }
       });
 
-      if (!existingOrder) {
+      ///Orders bug! TO FIX
+      if (!existingOrder || existingOrder.status === "paid") {
         const userOrdered = await User.findOne({ _id: userId });
         const productOrdered = await Product.findOne({ _id: prodId });
         const newOrder = await new Order({

@@ -15,6 +15,11 @@ const orderSchema = new Schema(
       required: true,
       default: 0
     },
+    status: {
+      type: String,
+      required: true,
+      default: "unpaid"
+    },
     user: {
       type: [Schema.Types.ObjectId],
       required: true,
