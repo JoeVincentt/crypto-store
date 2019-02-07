@@ -34,6 +34,8 @@ type Order {
 
 type Query {
   getAllProducts: [Product]
+  getProductsByCategory(category: String!): [Product]
+  getProductsByPrice(minPrice: Float, maxPrice: Float): [Product]
   getProduct(_id: ID!): Product
   searchProduct(searchTerm: String): [Product]
 

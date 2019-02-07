@@ -36,6 +36,20 @@ exports.resolvers = {
       const allProducts = await Product.find().sort({ createdDate: "desc" });
       return allProducts;
     },
+    getProductsByCategory: async (root, { category }, { Product }) => {
+      const products = await Product.find({ category }).sort({
+        likes: "desc"
+      });
+      return products;
+    },
+    getProductsByPrice: async (root, { minPrice, maxPrice }, { Product }) => {
+      const products = await Product.find({
+        price: { $gte: minPrice, $lte: maxPrice }
+      }).sort({
+        likes: "desc"
+      });
+      return products;
+    },
     getProduct: async (root, { _id }, { Product }) => {
       const product = await Product.findOne({ _id });
       return product;

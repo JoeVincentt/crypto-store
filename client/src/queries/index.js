@@ -38,6 +38,33 @@ export const SEARCH_PRODUCT = gql`
   }
 `;
 
+export const GET_PRODUCTS_BY_CATEGORY = gql`
+  query($category: String!) {
+    getProductsByCategory(category: $category) {
+      _id
+      imageUrl
+      name
+      category
+      price
+      description
+      likes
+    }
+  }
+`;
+export const GET_PRODUCTS_BY_PRICE = gql`
+  query($minPrice: Float, $maxPrice: Float) {
+    getProductsByPrice(minPrice: $minPrice, maxPrice: $maxPrice) {
+      _id
+      imageUrl
+      name
+      category
+      price
+      description
+      likes
+    }
+  }
+`;
+
 //Wallet Mutation
 export const GET_COINS = gql`
   mutation($userId: ID!, $amount: Float!) {
