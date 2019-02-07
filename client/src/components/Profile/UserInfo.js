@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import UserOrdersHistory from "./UserOrdersHistory";
 
 const formatDate = date => {
   // console.log(date);
@@ -41,6 +42,9 @@ const UserInfo = ({ session }) => (
         </p>
       )}
     </ul>
+    <br />
+    <h4>Order History</h4>
+    <UserOrdersHistory userId={session.getCurrentUser._id} />
   </div>
 );
 

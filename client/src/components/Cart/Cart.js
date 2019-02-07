@@ -6,11 +6,12 @@ import {
   GET_PRODUCT,
   DELETE_ORDER,
   GET_CURRENT_USER,
-  UPDATE_ORDER_QUANTITY
+  UPDATE_ORDER_QUANTITY,
+  WHOLE_CART_CHECKOUT
 } from "../../queries/index";
 import DeleteCartItem from "./DeleteCartItem";
 import UpdateCartItemQuantity from "./UpdateCartItemQuantity";
-import ItemCheckout from "./ItemCheckout";
+import Checkout from "./Checkout";
 
 import { Divider } from "react-materialize";
 
@@ -21,6 +22,15 @@ class Cart extends Component {
     );
     if (confirmDelete) {
       deleteOrder().then(({ data }) => {
+        console.log(data);
+      });
+    }
+  };
+
+  handleCheckout = wholeCartCheckout => {
+    const confirmCheckout = window.confirm("Confirm Checkout?");
+    if (confirmCheckout) {
+      wholeCartCheckout().then(({ data }) => {
         console.log(data);
       });
     }
@@ -37,6 +47,16 @@ class Cart extends Component {
             <div className="container center-align">
               <h1>Cart Items</h1>
               <h5>Total Cart Price: {data.getCurrentUser.cartTotal}</h5>
+              {data.getCurrentUser.cart.length > 0 ? (
+                <Checkout
+                  WHOLE_CART_CHECKOUT={WHOLE_CART_CHECKOUT}
+                  GET_CURRENT_USER={GET_CURRENT_USER}
+                  handleCheckout={this.handleCheckout}
+                  userId={data.getCurrentUser._id}
+                />
+              ) : (
+                ""
+              )}
 
               {data.getCurrentUser.cart.map((item, index) => (
                 <Query
@@ -102,7 +122,6 @@ class Cart extends Component {
                                   userId={item.user[0]._id}
                                   orderId={item._id}
                                 />{" "}
-                                <ItemCheckout />
                               </div>
                             </div>
                           </div>{" "}

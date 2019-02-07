@@ -43,6 +43,7 @@ type Query {
 
   getAllOrders: [Order]
   getOrder(_id: ID!): Order
+  getUserOrders(userId: ID!): [Order]
 }
 
 type Token {

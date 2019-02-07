@@ -26,6 +26,10 @@ exports.resolvers = {
       const order = await Order.findOne({ _id });
       return order;
     },
+    getUserOrders: async (root, { userId }, { Order }) => {
+      const order = await Order.find({ user: userId });
+      return order;
+    },
 
     // Product resolvers
     getAllProducts: async (root, args, { Product }) => {
@@ -172,7 +176,6 @@ exports.resolvers = {
         status: "unpaid"
       });
 
-      ///Orders bug! TO FIX
       if (!existingOrder) {
         const userOrdered = await User.findOne({ _id: userId });
         const productOrdered = await Product.findOne({ _id: prodId });
@@ -348,7 +351,11 @@ exports.resolvers = {
       await clearRef(_id);
 
       //deleting all orders what has user product
-      const ordersToDelete = await Order.deleteMany({ product: _id });
+
+      const ordersToDelete = await Order.deleteMany({
+        product: _id,
+        status: "unpaid"
+      });
 
       //deleting product
       const product = await Product.findOneAndRemove({ _id });

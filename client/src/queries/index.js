@@ -49,6 +49,16 @@ export const GET_COINS = gql`
   }
 `;
 
+//Checkout Mutation
+export const WHOLE_CART_CHECKOUT = gql`
+  mutation($userId: ID!) {
+    wholeCartCheckout(userId: $userId) {
+      _id
+      username
+    }
+  }
+`;
+
 //Order Mutation
 
 export const CREATE_ORDER = gql`
@@ -69,6 +79,22 @@ export const UPDATE_ORDER_QUANTITY = gql`
   mutation($orderId: ID!, $quantity: Int!) {
     updateOrderQuantity(orderId: $orderId, quantity: $quantity) {
       _id
+    }
+  }
+`;
+
+//Order Queries
+
+export const GET_USER_ORDERS = gql`
+  query($userId: ID!) {
+    getUserOrders(userId: $userId) {
+      _id
+      product {
+        name
+        price
+      }
+      quantity
+      status
     }
   }
 `;

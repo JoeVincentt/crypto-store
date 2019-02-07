@@ -24,7 +24,7 @@ const DeleteCartItem = ({
       return (
         <p
           onClick={() => handleDelete(deleteOrder)}
-          className="btn-floating left btn-large waves-effect waves-light red halfway-fab"
+          className="btn-floating right btn-large waves-effect waves-light red halfway-fab"
         >
           {attrs.loading ? (
             <i className="large material-icons">delete_sweep</i>
