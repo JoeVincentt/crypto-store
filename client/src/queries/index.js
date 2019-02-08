@@ -126,6 +126,23 @@ export const GET_USER_ORDERS = gql`
   }
 `;
 
+export const GET_SELLER_PRODUCTS_ORDERS = gql`
+  query($prodId: ID!) {
+    getSellerProductsOrders(prodId: $prodId) {
+      product {
+        name
+        price
+      }
+      status
+      quantity
+      user {
+        _id
+        username
+      }
+    }
+  }
+`;
+
 //Products Mutations
 export const ADD_PRODUCT = gql`
   mutation(

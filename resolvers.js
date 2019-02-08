@@ -31,6 +31,14 @@ exports.resolvers = {
       return order;
     },
 
+    getSellerProductsOrders: async (root, { prodId }, { Order }) => {
+      const order = await Order.find({ product: { _id: prodId } }).sort({
+        timestamps: "desc"
+      });
+
+      return order;
+    },
+
     // Product resolvers
     getAllProducts: async (root, args, { Product }) => {
       const allProducts = await Product.find().sort({ createdDate: "desc" });

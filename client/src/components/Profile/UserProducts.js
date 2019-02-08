@@ -9,8 +9,9 @@ import {
 } from "../../queries/index";
 import { Link } from "react-router-dom";
 import Spinner from "../Spinner";
-import { Modal, Input } from "react-materialize";
+import { Modal } from "react-materialize";
 import { FaEdit } from "react-icons/fa";
+import EditProductModal from "./EditProductModal";
 
 class UserProducts extends Component {
   state = {
@@ -59,6 +60,7 @@ class UserProducts extends Component {
 
   render() {
     const { username } = this.props;
+
     return (
       <Query query={GET_USER_PRODUCTS} variables={{ username }}>
         {({ data, loading, error }) => {
@@ -67,6 +69,10 @@ class UserProducts extends Component {
           // console.log(data);
           return (
             <div className="row">
+              {" "}
+              <Link to="/profile/orders" className="btn">
+                To orders
+              </Link>
               {!data.getUserProducts.length && (
                 <p>
                   <strong>You have no products yet. Add some!</strong>
@@ -139,6 +145,9 @@ class UserProducts extends Component {
                                       }
                                     >
                                       <EditProductModal
+                                        UPDATE_USER_PRODUCT={
+                                          UPDATE_USER_PRODUCT
+                                        }
                                         handleSubmit={this.handleSubmit}
                                         product={this.state}
                                         handleChange={this.handleChange}
@@ -180,74 +189,5 @@ class UserProducts extends Component {
     );
   }
 }
-
-const EditProductModal = ({ handleSubmit, product, handleChange }) => (
-  <Mutation
-    mutation={UPDATE_USER_PRODUCT}
-    variables={{
-      _id: product._id,
-      name: product.name,
-      imageUrl: product.imageUrl,
-      category: product.category,
-      description: product.description,
-      price: product.price
-    }}
-  >
-    {updateUserProduct => {
-      return (
-        <form onSubmit={event => handleSubmit(event, updateUserProduct)}>
-          <label htmlFor="name">Product Name</label>
-          <input
-            type="text"
-            name="name"
-            onChange={handleChange}
-            value={product.name}
-          />
-
-          <label htmlFor="imageUrl">Product Image</label>
-          <input
-            type="text"
-            name="imageUrl"
-            onChange={handleChange}
-            value={product.imageUrl}
-          />
-
-          <Input
-            type="select"
-            label="Category of Product"
-            name="category"
-            value={product.category}
-            onChange={handleChange}
-          >
-            <option value="Other">Other</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Home">Home</option>
-            <option value="Pets">Pets</option>
-          </Input>
-
-          <label htmlFor="description">Product Description</label>
-          <input
-            type="text"
-            name="description"
-            onChange={handleChange}
-            value={product.description}
-          />
-          <label htmlFor="price">Product Price</label>
-          <input
-            type="number"
-            name="price"
-            onChange={handleChange}
-            value={product.price}
-          />
-          <div className="modal-footer">
-            <button type="submit" className="btn modal-close">
-              Update
-            </button>
-          </div>
-        </form>
-      );
-    }}
-  </Mutation>
-);
 
 export default UserProducts;

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-
-import { Query } from "react-apollo";
+// import { Query } from "react-apollo";
 import {
   GET_ALL_PRODUCTS,
   GET_PRODUCTS_BY_CATEGORY,
@@ -8,7 +7,8 @@ import {
 } from "../queries/index";
 import ProductItem from "./Product/ProductItem";
 import posed from "react-pose";
-import Spinner from "./Spinner";
+import PriceSort from "./ProductSort/PriceSort";
+import CategorySort from "./ProductSort/CategorySort";
 
 const ProductList = posed.ul({
   shown: {
@@ -24,8 +24,8 @@ class App extends Component {
   state = {
     on: false,
     category: "Home",
-    minPrice: "",
-    maxPrice: "",
+    minPrice: 0,
+    maxPrice: 999999,
     priceRange: false
   };
 
@@ -50,107 +50,32 @@ class App extends Component {
   };
 
   render() {
-    const { category, minPrice, maxPrice, priceRange } = this.state;
+    const { category, minPrice, maxPrice, priceRange, on } = this.state;
     return (
       <div className="container center-align">
         <h2>
           Find Product You <strong>Love</strong>
         </h2>
-        <h3>By Price range:</h3>
-        <label htmlFor="minPrice">Min</label>
-        <input
-          type="number"
-          name="minPrice"
-          value={this.state.minPrice}
-          onChange={this.priceChange}
+        <PriceSort
+          GET_PRODUCTS_BY_PRICE={GET_PRODUCTS_BY_PRICE}
+          ProductItem={ProductItem}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          priceRange={priceRange}
+          on={on}
+          showPriceRange={this.showPriceRange}
+          priceChange={this.priceChange}
+          ProductList={ProductList}
         />
-        <label htmlFor="maxPrice">Max</label>
-        <input
-          type="number"
-          name="maxPrice"
-          value={this.state.maxPrice}
-          onChange={this.priceChange}
+        <CategorySort
+          GET_ALL_PRODUCTS={GET_ALL_PRODUCTS}
+          GET_PRODUCTS_BY_CATEGORY={GET_PRODUCTS_BY_CATEGORY}
+          category={category}
+          on={on}
+          categoryChange={this.categoryChange}
+          ProductList={ProductList}
+          ProductItem={ProductItem}
         />
-        <button className="btn" onClick={this.showPriceRange}>
-          Show results
-        </button>
-        {priceRange ? (
-          <Query
-            query={GET_PRODUCTS_BY_PRICE}
-            variables={{ minPrice: minPrice, maxPrice: maxPrice }}
-          >
-            {({ data, loading, error }) => {
-              if (loading) return <Spinner />;
-              if (error) return <div>Error</div>;
-
-              const { on } = this.state;
-              return (
-                <ProductList pose={on ? "shown" : "hidden"} className="row">
-                  {data.getProductsByPrice.map(product => (
-                    <ProductItem {...product} key={product._id} />
-                  ))}
-                </ProductList>
-              );
-            }}
-          </Query>
-        ) : (
-          ""
-        )}
-
-        <h3>By Category:</h3>
-        <button
-          className="btn"
-          onClick={() => this.categoryChange("ALLPRODUCTS")}
-        >
-          All Products
-        </button>
-        <button className="btn" onClick={() => this.categoryChange("Home")}>
-          Home
-        </button>
-        <button className="btn" onClick={() => this.categoryChange("Groceris")}>
-          Groceris
-        </button>
-        <button className="btn" onClick={() => this.categoryChange("Pets")}>
-          Pets
-        </button>
-        <div className="row">
-          <div className="col s12">
-            <Query query={GET_PRODUCTS_BY_CATEGORY} variables={{ category }}>
-              {({ data, loading, error }) => {
-                if (loading) return <Spinner />;
-                if (error) return <div>Error</div>;
-
-                const { on } = this.state;
-                return (
-                  <ProductList pose={on ? "shown" : "hidden"} className="row">
-                    {data.getProductsByCategory.map(product => (
-                      <ProductItem {...product} key={product._id} />
-                    ))}
-                  </ProductList>
-                );
-              }}
-            </Query>
-          </div>
-          {category === "ALLPRODUCTS" ? (
-            <Query query={GET_ALL_PRODUCTS}>
-              {({ data, loading, error }) => {
-                if (loading) return <Spinner />;
-                if (error) return <div>Error</div>;
-
-                const { on } = this.state;
-                return (
-                  <ProductList pose={on ? "shown" : "hidden"} className="row">
-                    {data.getAllProducts.map(product => (
-                      <ProductItem {...product} key={product._id} />
-                    ))}
-                  </ProductList>
-                );
-              }}
-            </Query>
-          ) : (
-            ""
-          )}
-        </div>
       </div>
     );
   }
